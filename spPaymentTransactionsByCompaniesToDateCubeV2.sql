@@ -1625,90 +1625,90 @@ WITH  MonthVsParticipatedQTDPreviousNumber_CTE AS
 		 ,A1.AvgTenureByYearQTD
 		 ,A1.AvgTenureByYearSemiYTD
 		 ,A1.AvgTenureByYearYTD
-		 ,A1.UUQTD	   - PreviousUUQTDBeforeMonth		 [HourlyContributerUUThisMonthToTheQuarter]
-		 ,A1.UUSemiYTD - PreviousUUSemiYTDBeforeMonth	 [HourlyContributerUUThisMonthToTheSemiYear]
-		 ,A1.UUYTD	   - PreviousUUYTDBeforeMonth		 [HourlyContributerUUThisMonthToTheYear]
-		 ,A1.UUSemiYTD - PreviousUUSemiYTDBeforeQuarter	 [HourlyContributerUUThisQuarterToTheSemiYear]
-		 ,A1.UUYTD	   - PreviousUUYTDBeforeQuarter		 [HourlyContributerUUThisQuarterToTheYear]
-		 ,A1.UUYTD	   - PreviousUUYTDBeforeSemiYTD		 [HourlyContributerUUThisSemiYTDToTheYear]
+		 ,A1.UUQTD     - PreviousUUQTDBeforeMonth		 [HourlyContributerUUThisMonthToTheQuarter]
+		 ,A1.UUSemiYTD - PreviousUUSemiYTDBeforeMonth		 [HourlyContributerUUThisMonthToTheSemiYear]
+		 ,A1.UUYTD     - PreviousUUYTDBeforeMonth		 [HourlyContributerUUThisMonthToTheYear]
+		 ,A1.UUSemiYTD - PreviousUUSemiYTDBeforeQuarter	 	 [HourlyContributerUUThisQuarterToTheSemiYear]
+		 ,A1.UUYTD     - PreviousUUYTDBeforeQuarter		 [HourlyContributerUUThisQuarterToTheYear]
+		 ,A1.UUYTD     - PreviousUUYTDBeforeSemiYTD		 [HourlyContributerUUThisSemiYTDToTheYear]
 		 ,UU2YTD
 		 ,UU3YTD
 		 ,UUFeatureLaunchedTD
-		 ,UU2YTD - PreviousUU2YTDBeforeMonth									 [HourlyContributerUUThisMonthToThe2YTD]
-		 ,UU2YTD - PreviousUU2YTDBeforeQuarter									 [HourlyContributerUUThisQuarterToThe2YTD]
-		 ,UU2YTD - PreviousUU2YTDBeforeSemiYTD									 [HourlyContributerUUThisSemiYTDToThe2YTD]
-		 ,UU2YTD - PreviousUU2YTDBeforeYTD										 [HourlyContributerUUThisYTDToThe2YTD]
-		 ,UU3YTD - PreviousUU3YTDBeforeMonth									 [HourlyContributerUUThisMonthToThe3YTD]
-		 ,UU3YTD - PreviousUU3YTDBeforeQuarter									 [HourlyContributerUUThisQuarterToThe3YTD]
-		 ,UU3YTD - PreviousUU3YTDBeforeSemiYTD									 [HourlyContributerUUThisSemiYTDToThe3YTD]
-		 ,UU3YTD - PreviousUU3YTDBeforeYTD										 [HourlyContributerUUThisYTDToThe3YTD]
-		 ,UU3YTD - PreviousUU3YTD2YTD											 [HourlyContributerUUThis2YTDToThe3YTD]
+		 ,UU2YTD - PreviousUU2YTDBeforeMonth						 [HourlyContributerUUThisMonthToThe2YTD]
+		 ,UU2YTD - PreviousUU2YTDBeforeQuarter						 [HourlyContributerUUThisQuarterToThe2YTD]
+		 ,UU2YTD - PreviousUU2YTDBeforeSemiYTD						 [HourlyContributerUUThisSemiYTDToThe2YTD]
+		 ,UU2YTD - PreviousUU2YTDBeforeYTD						 [HourlyContributerUUThisYTDToThe2YTD]
+		 ,UU3YTD - PreviousUU3YTDBeforeMonth						 [HourlyContributerUUThisMonthToThe3YTD]
+		 ,UU3YTD - PreviousUU3YTDBeforeQuarter						 [HourlyContributerUUThisQuarterToThe3YTD]
+		 ,UU3YTD - PreviousUU3YTDBeforeSemiYTD						 [HourlyContributerUUThisSemiYTDToThe3YTD]
+		 ,UU3YTD - PreviousUU3YTDBeforeYTD						 [HourlyContributerUUThisYTDToThe3YTD]
+		 ,UU3YTD - PreviousUU3YTD2YTD							 [HourlyContributerUUThis2YTDToThe3YTD]
 		 ,UUFeatureLaunchedTD - PreviousUUFeatureLaunchedTDBeforeMonth			 [HourlyContributerUUThisMonthToTheUUFeatureLaunchedTD]
 		 ,UUFeatureLaunchedTD - PreviousUUFeatureLaunchedTDBeforeQuarter		 [HourlyContributerUUThisQuarterToTheUUFeatureLaunchedTD]
 		 ,UUFeatureLaunchedTD - PreviousUUFeatureLaunchedTDBeforeSemiYTD		 [HourlyContributerUUThisSemiYTDToTheUUFeatureLaunchedTD]
 		 ,UUFeatureLaunchedTD - PreviousUUFeatureLaunchedTDBeforeYTD			 [HourlyContributerUUThisYTDToTheUUFeatureLaunchedTD]
-		 ,UUFeatureLaunchedTD - PreviousUUFeatureLaunchedTD2YTD					 [HourlyContributerUUThis2YTDToTheUUFeatureLaunchedTD]
-		 ,UUFeatureLaunchedTD - PreviousUUFeatureLaunchedTD3YTD					 [HourlyContributerUUThis3YTDToTheUUFeatureLaunchedTD]
-		,	ISNULL(UUMTD - A1.UUQTD		+ PreviousUUQTDBeforeMonth		  ,NULL) [HourlyRetainedUUThisMonthWithinTheQuarter]
-		,	ISNULL(UUMTD - A1.UUSemiYTD + PreviousUUSemiYTDBeforeMonth	  ,NULL) [HourlyRetainedUUThisMonthWithinTheSemiYear]
-		,	ISNULL(UUMTD - A1.UUYTD		+ PreviousUUYTDBeforeMonth		  ,NULL) [HourlyRetainedUUThisMonthWithinTheYear]
-		,	ISNULL(UUQTD - A1.UUSemiYTD + PreviousUUSemiYTDBeforeQuarter  ,NULL) [HourlyRetainedUUThisQuarterWithinTheSemiYear]
-		,	ISNULL(UUQTD - A1.UUYTD		+ PreviousUUYTDBeforeQuarter	  ,NULL) [HourlyRetainedUUThisQuarterWithinTheYear]
-		,	ISNULL(UUSemiYTD - A1.UUYTD	+ PreviousUUYTDBeforeSemiYTD	  ,NULL) [HourlyRetainedUUThisSemiYearWithinTheYear]
-		,COALESCE((UUMTD - A1.UUQTD	    + PreviousUUQTDBeforeMonth		) * 1.0 / NULLIF(PreviousUUQTDBeforeMonth		,0),0) [HourlyRetentionRateThisMonthWithinTheQuarter]
+		 ,UUFeatureLaunchedTD - PreviousUUFeatureLaunchedTD2YTD				 [HourlyContributerUUThis2YTDToTheUUFeatureLaunchedTD]
+		 ,UUFeatureLaunchedTD - PreviousUUFeatureLaunchedTD3YTD				 [HourlyContributerUUThis3YTDToTheUUFeatureLaunchedTD]
+		,	ISNULL(UUMTD - A1.UUQTD	    + PreviousUUQTDBeforeMonth      ,NULL) [HourlyRetainedUUThisMonthWithinTheQuarter]
+		,	ISNULL(UUMTD - A1.UUSemiYTD + PreviousUUSemiYTDBeforeMonth  ,NULL) [HourlyRetainedUUThisMonthWithinTheSemiYear]
+		,	ISNULL(UUMTD - A1.UUYTD	    + PreviousUUYTDBeforeMonth      ,NULL) [HourlyRetainedUUThisMonthWithinTheYear]
+		,	ISNULL(UUQTD - A1.UUSemiYTD + PreviousUUSemiYTDBeforeQuarter,NULL) [HourlyRetainedUUThisQuarterWithinTheSemiYear]
+		,	ISNULL(UUQTD - A1.UUYTD	    + PreviousUUYTDBeforeQuarter    ,NULL) [HourlyRetainedUUThisQuarterWithinTheYear]
+		,	ISNULL(UUSemiYTD - A1.UUYTD + PreviousUUYTDBeforeSemiYTD    ,NULL) [HourlyRetainedUUThisSemiYearWithinTheYear]
+		,COALESCE((UUMTD - A1.UUQTD	+ PreviousUUQTDBeforeMonth	) * 1.0 / NULLIF(PreviousUUQTDBeforeMonth	,0),0) [HourlyRetentionRateThisMonthWithinTheQuarter]
 		,COALESCE((UUMTD - A1.UUSemiYTD + PreviousUUSemiYTDBeforeMonth  ) * 1.0 / NULLIF(PreviousUUSemiYTDBeforeMonth	,0),0) [HourlyRetentionRateThisMonthWithinTheSemiYear]
-		,COALESCE((UUMTD - A1.UUYTD	    + PreviousUUYTDBeforeMonth		) * 1.0 / NULLIF(PreviousUUYTDBeforeMonth		,0),0) [HourlyRetentionRateThisMonthWithinTheYear]
+		,COALESCE((UUMTD - A1.UUYTD	+ PreviousUUYTDBeforeMonth	) * 1.0 / NULLIF(PreviousUUYTDBeforeMonth	,0),0) [HourlyRetentionRateThisMonthWithinTheYear]
 		,COALESCE((UUQTD - A1.UUSemiYTD + PreviousUUSemiYTDBeforeQuarter) * 1.0 / NULLIF(PreviousUUSemiYTDBeforeQuarter	,0),0) [HourlyRetentionRateThisQuarterWithinTheSemiYear]
-		,COALESCE((UUQTD - A1.UUYTD		+ PreviousUUYTDBeforeQuarter	) * 1.0 / NULLIF(PreviousUUYTDBeforeQuarter	 	,0),0) [HourlyRetentionRateThisQuarterWithinTheYear]
-		,COALESCE((UUSemiYTD - A1.UUYTD	+ PreviousUUYTDBeforeSemiYTD	) * 1.0 / NULLIF(PreviousUUYTDBeforeSemiYTD	 	,0),0) [HourlyRetentionRateThisSemiYTDWithinTheYear]
+		,COALESCE((UUQTD - A1.UUYTD	+ PreviousUUYTDBeforeQuarter	) * 1.0 / NULLIF(PreviousUUYTDBeforeQuarter	,0),0) [HourlyRetentionRateThisQuarterWithinTheYear]
+		,COALESCE((UUSemiYTD - A1.UUYTD	+ PreviousUUYTDBeforeSemiYTD	) * 1.0 / NULLIF(PreviousUUYTDBeforeSemiYTD	,0),0) [HourlyRetentionRateThisSemiYTDWithinTheYear]
 		,	ISNULL(UUMTD	   - UU2YTD			     + PreviousUU2YTDBeforeMonth				,NULL) [HourlyRetainUUThisMonthToThe2YTD]
 		,	ISNULL(UUQTD	   - UU2YTD			     + PreviousUU2YTDBeforeQuarter				,NULL) [HourlyRetainUUThisQuarterToThe2YTD]
-		,	ISNULL(UUSemiYTD - UU2YTD			     + PreviousUU2YTDBeforeSemiYTD				,NULL) [HourlyRetainUUThisSemiYTDToThe2YTD]
+		,	ISNULL(UUSemiYTD   - UU2YTD			     + PreviousUU2YTDBeforeSemiYTD				,NULL) [HourlyRetainUUThisSemiYTDToThe2YTD]
 		,	ISNULL(UUYTD	   - UU2YTD			     + PreviousUU2YTDBeforeYTD	 				,NULL) [HourlyRetainUUThisYTDToThe2YTD]
 		,	ISNULL(UUMTD	   - UU3YTD			     + PreviousUU3YTDBeforeMonth	 			,NULL) [HourlyRetainUUThisMonthToThe3YTD]
 		,	ISNULL(UUQTD	   - UU3YTD			     + PreviousUU3YTDBeforeQuarter				,NULL) [HourlyRetainUUThisQuarterToThe3YTD]
-		,	ISNULL(UUSemiYTD - UU3YTD			     + PreviousUU3YTDBeforeSemiYTD				,NULL) [HourlyRetainUUThisSemiYTDToThe3YTD]
+		,	ISNULL(UUSemiYTD   - UU3YTD			     + PreviousUU3YTDBeforeSemiYTD				,NULL) [HourlyRetainUUThisSemiYTDToThe3YTD]
 		,	ISNULL(UUYTD	   - UU3YTD			     + PreviousUU3YTDBeforeYTD	 				,NULL) [HourlyRetainUUThisYTDToThe3YTD]
-		,	ISNULL(UU3YTD	   - UU3YTD			     + PreviousUU3YTD2YTD		 				,NULL) [HourlyRetainUUThis2YTDToThe3YTD]
+		,	ISNULL(UU3YTD	   - UU3YTD			     + PreviousUU3YTD2YTD		 			,NULL) [HourlyRetainUUThis2YTDToThe3YTD]
 		,	ISNULL(UUMTD	   - UUFeatureLaunchedTD + PreviousUUFeatureLaunchedTDBeforeMonth   ,NULL) [HourlyRetainUUThisMonthToTheUUFeatureLaunchedTD]
-		,	ISNULL(UUQTD	   - UUFeatureLaunchedTD + PreviousUUFeatureLaunchedTDBeforeQuarter	,NULL) [HourlyRetainUUThisQuarterToTheUUFeatureLaunchedTD]
-		,	ISNULL(UUSemiYTD   - UUFeatureLaunchedTD + PreviousUUFeatureLaunchedTDBeforeSemiYTD	,NULL) [HourlyRetainUUThisSemiYTDToTheUUFeatureLaunchedTD]
-		,	ISNULL(UUYTD	   - UUFeatureLaunchedTD + PreviousUUFeatureLaunchedTDBeforeYTD		,NULL) [HourlyRetainUUThisYTDToTheUUFeatureLaunchedTD]
-		,	ISNULL(UU3YTD	   - UUFeatureLaunchedTD + PreviousUUFeatureLaunchedTD2YTD			,NULL) [HourlyRetainUUThis2YTDToTheUUFeatureLaunchedTD]
-		,	ISNULL(UU3YTD	   - UUFeatureLaunchedTD + PreviousUUFeatureLaunchedTD3YTD			,NULL) [HourlyRetainUUThis3YTDToTheUUFeatureLaunchedTD]
-		,COALESCE((UUMTD	   - UU2YTD			     + PreviousUU2YTDBeforeMonth				) * 1.0 / NULLIF(PreviousUU2YTDBeforeMonth					,0),0)	[HourlyRetentionRateThisMonthToThe2YTD]			
-		,COALESCE((UUQTD	   - UU2YTD			     + PreviousUU2YTDBeforeQuarter				) * 1.0 / NULLIF(PreviousUU2YTDBeforeQuarter				,0),0)	[HourlyRetentionRateThisQuarterToThe2YTD]
-		,COALESCE((UUSemiYTD   - UU2YTD			     + PreviousUU2YTDBeforeSemiYTD				) * 1.0 / NULLIF(PreviousUU2YTDBeforeSemiYTD				,0),0)	[HourlyRetentionRateThisSemiYTDToThe2YTD]
-		,COALESCE((UUYTD	   - UU2YTD			     + PreviousUU2YTDBeforeYTD	 				) * 1.0 / NULLIF(PreviousUU2YTDBeforeYTD	 				,0),0)	[HourlyRetentionRateThisYTDToThe2YTD]
-		,COALESCE((UUMTD	   - UU3YTD			     + PreviousUU3YTDBeforeMonth	 			) * 1.0 / NULLIF(PreviousUU3YTDBeforeMonth	 				,0),0)	[HourlyRetentionRateThisMonthToThe3YTD]
-		,COALESCE((UUQTD	   - UU3YTD			     + PreviousUU3YTDBeforeQuarter				) * 1.0 / NULLIF(PreviousUU3YTDBeforeQuarter				,0),0)	[HourlyRetentionRateThisQuarterToThe3YTD]
-		,COALESCE((UUSemiYTD   - UU3YTD			     + PreviousUU3YTDBeforeSemiYTD				) * 1.0 / NULLIF(PreviousUU3YTDBeforeSemiYTD				,0),0)	[HourlyRetentionRateThisSemiYTDToThe3YTD]
-		,COALESCE((UUYTD	   - UU3YTD			     + PreviousUU3YTDBeforeYTD	 				) * 1.0 / NULLIF(PreviousUU3YTDBeforeYTD	 				,0),0)	[HourlyRetentionRateThisYTDToThe3YTD]
-		,COALESCE((UU2YTD	   - UU3YTD			     + PreviousUU3YTD2YTD		 				) * 1.0 / NULLIF(PreviousUU3YTD2YTD		 					,0),0)	[HourlyRetentionRateThis2YTDToThe3YTD]
-		,COALESCE((UUMTD	   - UUFeatureLaunchedTD + PreviousUUFeatureLaunchedTDBeforeMonth   ) * 1.0 / NULLIF(PreviousUUFeatureLaunchedTDBeforeMonth   	,0),0)	[HourlyRetentionRateThisMonthToTheUUFeatureLaunchedTD]
-		,COALESCE((UUQTD	   - UUFeatureLaunchedTD + PreviousUUFeatureLaunchedTDBeforeQuarter	) * 1.0 / NULLIF(PreviousUUFeatureLaunchedTDBeforeQuarter	,0),0)	[HourlyRetentionRateThisQuarterToTheUUFeatureLaunchedTD]
-		,COALESCE((UUSemiYTD   - UUFeatureLaunchedTD + PreviousUUFeatureLaunchedTDBeforeSemiYTD	) * 1.0 / NULLIF(PreviousUUFeatureLaunchedTDBeforeSemiYTD	,0),0)	[HourlyRetentionRateThisSemiYTDToTheUUFeatureLaunchedTD]
-		,COALESCE((UUYTD	   - UUFeatureLaunchedTD + PreviousUUFeatureLaunchedTDBeforeYTD		) * 1.0 / NULLIF(PreviousUUFeatureLaunchedTDBeforeYTD		,0),0)	[HourlyRetentionRateThisYTDToTheUUFeatureLaunchedTD]
-		,COALESCE((UU2YTD	   - UUFeatureLaunchedTD + PreviousUUFeatureLaunchedTD2YTD			) * 1.0 / NULLIF(PreviousUUFeatureLaunchedTD2YTD			,0),0)	[HourlyRetentionRateThis2YTDToTheUUFeatureLaunchedTD]
-		,COALESCE((UU3YTD	   - UUFeatureLaunchedTD + PreviousUUFeatureLaunchedTD3YTD			) * 1.0 / NULLIF(PreviousUUFeatureLaunchedTD3YTD			,0),0)	[HourlyRetentionRateThis3YTDToTheUUFeatureLaunchedTD]
-	FROM ReadyToUpdateDataToAnalyzingData							  A1
-	LEFT JOIN MonthVsParticipatedQTDPreviousNumber_CTE				  B1 ON A1.JoinMeColumn =  B1.JoinMeColumn AND A1.PaymentType = B1.PaymentType  AND A1.CompanyId = B1.CompanyId
-	LEFT JOIN MonthVsParticipatedSemiYTDPreviousNumber_CTE			  B2 ON A1.JoinMeColumn =  B2.JoinMeColumn AND A1.PaymentType = B2.PaymentType  AND A1.CompanyId = B2.CompanyId
-	LEFT JOIN MonthVsParticipatedYTDPreviousNumber_CTE				  B3 ON A1.JoinMeColumn =  B3.JoinMeColumn AND A1.PaymentType = B3.PaymentType  AND A1.CompanyId = B3.CompanyId
-	LEFT JOIN QuarterVsParticipatedSemiYTDPreviousNumber_CTE		  B4 ON A1.JoinMeColumn =  B4.JoinMeColumn AND A1.PaymentType = B4.PaymentType  AND A1.CompanyId = B4.CompanyId
-	LEFT JOIN QuarterVsParticipatedYTDPreviousNumber_CTE			  B5 ON A1.JoinMeColumn =  B5.JoinMeColumn AND A1.PaymentType = B5.PaymentType  AND A1.CompanyId = B5.CompanyId
-	LEFT JOIN SemiYTDVsParticipatedYTDPreviousNumber_CTE			  B6 ON A1.JoinMeColumn =  B6.JoinMeColumn AND A1.PaymentType = B6.PaymentType  AND A1.CompanyId = B6.CompanyId
-	LEFT JOIN MonthVsParticipated2YTDPreviousNumber_CTE				  B7 ON A1.JoinMeColumn =  B7.JoinMeColumn AND A1.PaymentType = B7.PaymentType  AND A1.CompanyId = B7.CompanyId
-	LEFT JOIN QuarterVsParticipated2YTDPreviousNumber_CTE 			  B8 ON A1.JoinMeColumn =  B8.JoinMeColumn AND A1.PaymentType = B8.PaymentType  AND A1.CompanyId = B8.CompanyId
-	LEFT JOIN SemiYTDVsParticipated2YTDPreviousNumber_CTE 			  B9 ON A1.JoinMeColumn =  B9.JoinMeColumn AND A1.PaymentType = B9.PaymentType  AND A1.CompanyId = B9.CompanyId
-	LEFT JOIN YTDVsParticipated2YTDPreviousNumber_CTE				 B10 ON A1.JoinMeColumn = B10.JoinMeColumn AND A1.PaymentType = B10.PaymentType AND A1.CompanyId = B10.CompanyId
-	LEFT JOIN MonthVsParticipated3YTDPreviousNumber_CTE 			 B11 ON A1.JoinMeColumn = B11.JoinMeColumn AND A1.PaymentType = B11.PaymentType AND A1.CompanyId = B11.CompanyId
-	LEFT JOIN QuarterVsParticipated3YTDPreviousNumber_CTE 			 B12 ON A1.JoinMeColumn = B12.JoinMeColumn AND A1.PaymentType = B12.PaymentType AND A1.CompanyId = B12.CompanyId
-	LEFT JOIN SemiYTDVsParticipated3YTDPreviousNumber_CTE 			 B13 ON A1.JoinMeColumn = B13.JoinMeColumn AND A1.PaymentType = B13.PaymentType AND A1.CompanyId = B13.CompanyId
-	LEFT JOIN YTDVsParticipated3YTDPreviousNumber_CTE 				 B14 ON A1.JoinMeColumn = B14.JoinMeColumn AND A1.PaymentType = B14.PaymentType AND A1.CompanyId = B14.CompanyId
-	LEFT JOIN YTD2VsParticipated3YTDPreviousNumber_CTE 				 B15 ON A1.JoinMeColumn = B15.JoinMeColumn AND A1.PaymentType = B15.PaymentType AND A1.CompanyId = B15.CompanyId
+		,	ISNULL(UUQTD	   - UUFeatureLaunchedTD + PreviousUUFeatureLaunchedTDBeforeQuarter ,NULL) [HourlyRetainUUThisQuarterToTheUUFeatureLaunchedTD]
+		,	ISNULL(UUSemiYTD   - UUFeatureLaunchedTD + PreviousUUFeatureLaunchedTDBeforeSemiYTD ,NULL) [HourlyRetainUUThisSemiYTDToTheUUFeatureLaunchedTD]
+		,	ISNULL(UUYTD	   - UUFeatureLaunchedTD + PreviousUUFeatureLaunchedTDBeforeYTD	    ,NULL) [HourlyRetainUUThisYTDToTheUUFeatureLaunchedTD]
+		,	ISNULL(UU3YTD	   - UUFeatureLaunchedTD + PreviousUUFeatureLaunchedTD2YTD	    ,NULL) [HourlyRetainUUThis2YTDToTheUUFeatureLaunchedTD]
+		,	ISNULL(UU3YTD	   - UUFeatureLaunchedTD + PreviousUUFeatureLaunchedTD3YTD	    ,NULL) [HourlyRetainUUThis3YTDToTheUUFeatureLaunchedTD]
+		,COALESCE((UUMTD	   - UU2YTD			     + PreviousUU2YTDBeforeMonth				) * 1.0 / NULLIF(PreviousUU2YTDBeforeMonth		,0),0)	[HourlyRetentionRateThisMonthToThe2YTD]			
+		,COALESCE((UUQTD	   - UU2YTD			     + PreviousUU2YTDBeforeQuarter				) * 1.0 / NULLIF(PreviousUU2YTDBeforeQuarter		,0),0)	[HourlyRetentionRateThisQuarterToThe2YTD]
+		,COALESCE((UUSemiYTD   	   - UU2YTD			     + PreviousUU2YTDBeforeSemiYTD				) * 1.0 / NULLIF(PreviousUU2YTDBeforeSemiYTD		,0),0)	[HourlyRetentionRateThisSemiYTDToThe2YTD]
+		,COALESCE((UUYTD	   - UU2YTD			     + PreviousUU2YTDBeforeYTD	 				) * 1.0 / NULLIF(PreviousUU2YTDBeforeYTD	 	,0),0)	[HourlyRetentionRateThisYTDToThe2YTD]
+		,COALESCE((UUMTD	   - UU3YTD			     + PreviousUU3YTDBeforeMonth	 			) * 1.0 / NULLIF(PreviousUU3YTDBeforeMonth	 	,0),0)	[HourlyRetentionRateThisMonthToThe3YTD]
+		,COALESCE((UUQTD	   - UU3YTD			     + PreviousUU3YTDBeforeQuarter				) * 1.0 / NULLIF(PreviousUU3YTDBeforeQuarter		,0),0)	[HourlyRetentionRateThisQuarterToThe3YTD]
+		,COALESCE((UUSemiYTD       - UU3YTD			     + PreviousUU3YTDBeforeSemiYTD				) * 1.0 / NULLIF(PreviousUU3YTDBeforeSemiYTD		,0),0)	[HourlyRetentionRateThisSemiYTDToThe3YTD]
+		,COALESCE((UUYTD	   - UU3YTD			     + PreviousUU3YTDBeforeYTD	 				) * 1.0 / NULLIF(PreviousUU3YTDBeforeYTD	 	,0),0)	[HourlyRetentionRateThisYTDToThe3YTD]
+		,COALESCE((UU2YTD	   - UU3YTD			     + PreviousUU3YTD2YTD		 			) * 1.0 / NULLIF(PreviousUU3YTD2YTD		 					,0),0)	[HourlyRetentionRateThis2YTDToThe3YTD]
+		,COALESCE((UUMTD	   - UUFeatureLaunchedTD + PreviousUUFeatureLaunchedTDBeforeMonth   ) * 1.0 / NULLIF(PreviousUUFeatureLaunchedTDBeforeMonth   ,0),0)	[HourlyRetentionRateThisMonthToTheUUFeatureLaunchedTD]
+		,COALESCE((UUQTD	   - UUFeatureLaunchedTD + PreviousUUFeatureLaunchedTDBeforeQuarter ) * 1.0 / NULLIF(PreviousUUFeatureLaunchedTDBeforeQuarter ,0),0)	[HourlyRetentionRateThisQuarterToTheUUFeatureLaunchedTD]
+		,COALESCE((UUSemiYTD   - UUFeatureLaunchedTD + PreviousUUFeatureLaunchedTDBeforeSemiYTD	    ) * 1.0 / NULLIF(PreviousUUFeatureLaunchedTDBeforeSemiYTD ,0),0)	[HourlyRetentionRateThisSemiYTDToTheUUFeatureLaunchedTD]
+		,COALESCE((UUYTD	   - UUFeatureLaunchedTD + PreviousUUFeatureLaunchedTDBeforeYTD	    ) * 1.0 / NULLIF(PreviousUUFeatureLaunchedTDBeforeYTD     ,0),0)	[HourlyRetentionRateThisYTDToTheUUFeatureLaunchedTD]
+		,COALESCE((UU2YTD	   - UUFeatureLaunchedTD + PreviousUUFeatureLaunchedTD2YTD	    ) * 1.0 / NULLIF(PreviousUUFeatureLaunchedTD2YTD          ,0),0)	[HourlyRetentionRateThis2YTDToTheUUFeatureLaunchedTD]
+		,COALESCE((UU3YTD	   - UUFeatureLaunchedTD + PreviousUUFeatureLaunchedTD3YTD	    ) * 1.0 / NULLIF(PreviousUUFeatureLaunchedTD3YTD 	      ,0),0)	[HourlyRetentionRateThis3YTDToTheUUFeatureLaunchedTD]
+	FROM ReadyToUpdateDataToAnalyzingData				  A1
+	LEFT JOIN MonthVsParticipatedQTDPreviousNumber_CTE		  B1 ON A1.JoinMeColumn =  B1.JoinMeColumn AND A1.PaymentType = B1.PaymentType  AND A1.CompanyId = B1.CompanyId
+	LEFT JOIN MonthVsParticipatedSemiYTDPreviousNumber_CTE		  B2 ON A1.JoinMeColumn =  B2.JoinMeColumn AND A1.PaymentType = B2.PaymentType  AND A1.CompanyId = B2.CompanyId
+	LEFT JOIN MonthVsParticipatedYTDPreviousNumber_CTE		  B3 ON A1.JoinMeColumn =  B3.JoinMeColumn AND A1.PaymentType = B3.PaymentType  AND A1.CompanyId = B3.CompanyId
+	LEFT JOIN QuarterVsParticipatedSemiYTDPreviousNumber_CTE	  B4 ON A1.JoinMeColumn =  B4.JoinMeColumn AND A1.PaymentType = B4.PaymentType  AND A1.CompanyId = B4.CompanyId
+	LEFT JOIN QuarterVsParticipatedYTDPreviousNumber_CTE		  B5 ON A1.JoinMeColumn =  B5.JoinMeColumn AND A1.PaymentType = B5.PaymentType  AND A1.CompanyId = B5.CompanyId
+	LEFT JOIN SemiYTDVsParticipatedYTDPreviousNumber_CTE		  B6 ON A1.JoinMeColumn =  B6.JoinMeColumn AND A1.PaymentType = B6.PaymentType  AND A1.CompanyId = B6.CompanyId
+	LEFT JOIN MonthVsParticipated2YTDPreviousNumber_CTE		  B7 ON A1.JoinMeColumn =  B7.JoinMeColumn AND A1.PaymentType = B7.PaymentType  AND A1.CompanyId = B7.CompanyId
+	LEFT JOIN QuarterVsParticipated2YTDPreviousNumber_CTE 		  B8 ON A1.JoinMeColumn =  B8.JoinMeColumn AND A1.PaymentType = B8.PaymentType  AND A1.CompanyId = B8.CompanyId
+	LEFT JOIN SemiYTDVsParticipated2YTDPreviousNumber_CTE 		  B9 ON A1.JoinMeColumn =  B9.JoinMeColumn AND A1.PaymentType = B9.PaymentType  AND A1.CompanyId = B9.CompanyId
+	LEFT JOIN YTDVsParticipated2YTDPreviousNumber_CTE		 B10 ON A1.JoinMeColumn = B10.JoinMeColumn AND A1.PaymentType = B10.PaymentType AND A1.CompanyId = B10.CompanyId
+	LEFT JOIN MonthVsParticipated3YTDPreviousNumber_CTE 		 B11 ON A1.JoinMeColumn = B11.JoinMeColumn AND A1.PaymentType = B11.PaymentType AND A1.CompanyId = B11.CompanyId
+	LEFT JOIN QuarterVsParticipated3YTDPreviousNumber_CTE 		 B12 ON A1.JoinMeColumn = B12.JoinMeColumn AND A1.PaymentType = B12.PaymentType AND A1.CompanyId = B12.CompanyId
+	LEFT JOIN SemiYTDVsParticipated3YTDPreviousNumber_CTE 		 B13 ON A1.JoinMeColumn = B13.JoinMeColumn AND A1.PaymentType = B13.PaymentType AND A1.CompanyId = B13.CompanyId
+	LEFT JOIN YTDVsParticipated3YTDPreviousNumber_CTE 		 B14 ON A1.JoinMeColumn = B14.JoinMeColumn AND A1.PaymentType = B14.PaymentType AND A1.CompanyId = B14.CompanyId
+	LEFT JOIN YTD2VsParticipated3YTDPreviousNumber_CTE 		 B15 ON A1.JoinMeColumn = B15.JoinMeColumn AND A1.PaymentType = B15.PaymentType AND A1.CompanyId = B15.CompanyId
 	LEFT JOIN MonthVsParticipatedFeatureLaunchedPreviousNumber_CTE 	 B16 ON A1.JoinMeColumn = B16.JoinMeColumn AND A1.PaymentType = B16.PaymentType AND A1.CompanyId = B16.CompanyId
-	LEFT JOIN QuarterVsParticipatedFeatureLaunchedPreviousNumber_CTE B17 ON A1.JoinMeColumn = B17.JoinMeColumn AND A1.PaymentType = B17 .PaymentType AND A1.CompanyId = B17.CompanyId
+	LEFT JOIN QuarterVsParticipatedFeatureLaunchedPreviousNumber_CTE B17 ON A1.JoinMeColumn = B17.JoinMeColumn AND A1.PaymentType = B17.PaymentType AND A1.CompanyId = B17.CompanyId
 	LEFT JOIN SemiYTDVsParticipatedFeatureLaunchedPreviousNumber_CTE B18 ON A1.JoinMeColumn = B18.JoinMeColumn AND A1.PaymentType = B18.PaymentType AND A1.CompanyId = B18.CompanyId
 	LEFT JOIN YTDVsParticipatedFeatureLaunchedPreviousNumber_CTE 	 B19 ON A1.JoinMeColumn = B19.JoinMeColumn AND A1.PaymentType = B19.PaymentType AND A1.CompanyId = B19.CompanyId
 	LEFT JOIN YTD2VsParticipatedFeatureLaunchedPreviousNumber_CTE 	 B20 ON A1.JoinMeColumn = B20.JoinMeColumn AND A1.PaymentType = B20.PaymentType AND A1.CompanyId = B20.CompanyId
