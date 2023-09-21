@@ -40,17 +40,17 @@ declare @DailySP as Date SET @DailySP = DATEADD(DAY,-@d,@BaseDay)
 		   BEGIN
 		   SET @m = @m + 1
 		   END
-		DECLARE @Param_MTDIndicator	    AS DATE =					 Dateadd(Day,1,EOMonth(dateadd(MONTH,-@m,@BaseDay))),
---				@Param_2MTDIndicator	AS DATE = DATEFROMPARTS(YEAR(Dateadd(day,-@m,@BaseDay)),(((MONTH(dateadd(day,-@m,@BaseDay)))-1)/2)*2+1,1),
-			    @Param_QTDIndicator	    AS DATE = DATEFROMPARTS(YEAR(Dateadd(day,-@m,@BaseDay)), ((MONTH(dateadd(day,-@m,@BaseDay)) -1)/3)*3+1,1),
-			    @Param_SemiYTDIndicator AS DATE = DATEFROMPARTS(YEAR(Dateadd(day,-@m,@BaseDay)),(((MONTH(dateadd(day,-@m,@BaseDay)))-1)/6)*6+1,1),
-			    @Param_YTDIndicator	    AS DATE = DATEFROMPARTS(YEAR(Dateadd(day,-@y,@BaseDay)),1,1),
-				@Param_2YTDIndicator	AS DATE = DATEFROMPARTS(YEAR(Dateadd(day,-@y,@BaseDay))-1,1,1),
-				@Param_3YTDIndicator	AS DATE = DATEFROMPARTS(YEAR(Dateadd(day,-@y,@BaseDay))-2,1,1),
-				@Param_FirstPaymentTxDate AS DATE = '2020-01-20'
+		DECLARE @Param_MTDIndicator	   	AS DATE =					 Dateadd(Day,1,EOMonth(dateadd(MONTH,-@m,@BaseDay))),
+--			    @Param_2MTDIndicator	AS DATE = DATEFROMPARTS(YEAR(Dateadd(day,-@m,@BaseDay)),(((MONTH(dateadd(day,-@m,@BaseDay)))-1)/2)*2+1,1),
+			    @Param_QTDIndicator	    	AS DATE = DATEFROMPARTS(YEAR(Dateadd(day,-@m,@BaseDay)), ((MONTH(dateadd(day,-@m,@BaseDay)) -1)/3)*3+1,1),
+			    @Param_SemiYTDIndicator 	AS DATE = DATEFROMPARTS(YEAR(Dateadd(day,-@m,@BaseDay)),(((MONTH(dateadd(day,-@m,@BaseDay)))-1)/6)*6+1,1),
+			    @Param_YTDIndicator	    	AS DATE = DATEFROMPARTS(YEAR(Dateadd(day,-@y,@BaseDay)),1,1),
+			    @Param_2YTDIndicator	AS DATE = DATEFROMPARTS(YEAR(Dateadd(day,-@y,@BaseDay))-1,1,1),
+			    @Param_3YTDIndicator	AS DATE = DATEFROMPARTS(YEAR(Dateadd(day,-@y,@BaseDay))-2,1,1),
+			    @Param_FirstPaymentTxDate 	AS DATE = '2020-01-20'
 CREATE TABLE #TempDateHours (HourlyDateTime DATETIME);
 DECLARE	 @StartDateParameter AS DATETIME = @Param_FirstPaymentTxDate--DATEFROMPARTS(YEAR(DATEADD(DAY,-@y,cast(@BaseDay as DATETIME))),1,1)--DATEADD(DAY,-1,cast(@BaseDay as DATETIME))
-DECLARE  @StartDate			 AS DATETIME = DATEADD(DAY,-1,cast(@StartDateParameter as DATETIME))
+DECLARE  @StartDate	     AS DATETIME = DATEADD(DAY,-1,cast(@StartDateParameter as DATETIME))
 		WHILE @StartDate <= @BaseDay
 			BEGIN
 				IF(@inc <= 23)
@@ -74,25 +74,25 @@ DELETE FROM  DWH_Workspace.[\skacar].[FACT_PaymentTransactionsByCompaniesToDateC
 WITH CustomerBasedCTE AS
 (
 		select
-			   DATEFROMPARTS(YEAR(CreatedAt),(((MONTH(CreatedAt))-1)/6)*6+1,1) SemiYearIndicator
+			   DATEFROMPARTS(YEAR(CreatedAt),(((MONTH(CreatedAt))-1)/6)*6+1,1)					 SemiYearIndicator
 			  ,DATEPART(q,CreatedAt)										 QuarterNumber
 			  ,cast(CreatedAt as date)			   							 [Date]
-			  ,dateadd(hour,(datepart(hour, DATEADD(HH,0,CreatedAt))),dateadd(day, 0, datediff(day,  0, CreatedAt)))	ContributedDateHour
---			  ,DATEFROMPARTS(YEAR(CreatedAt),(((MONTH(CreatedAt))-1)/2)*2+1,1) Indicator_2MTD
+			  ,dateadd(hour,(datepart(hour, DATEADD(HH,0,CreatedAt))),dateadd(day, 0, datediff(day,  0, CreatedAt))) ContributedDateHour
+--			  ,DATEFROMPARTS(YEAR(CreatedAt),(((MONTH(CreatedAt))-1)/2)*2+1,1)  Indicator_2MTD
 			  ,count(Id)							    TxCount
 			  ,sum(Amount)							    TotalVolume
-			  ,MAX(Age)									Age 
-			  ,MAX(TenureByYear)						TenureByYear
+			  ,MAX(Age)							    Age 
+			  ,MAX(TenureByYear)						    TenureByYear
 			  ,CustomerKey
 			  ,ISNULL(PaymentType	,10000)	PaymentType
-			  ,ISNULL(CompanyId		,10000)	CompanyId
-		--	  ,ISNULL(CustomerType			,10000)	CustomerType
+			  ,ISNULL(CompanyId	,10000)	CompanyId
+		--	  ,ISNULL(CustomerType	,10000)	CustomerType
 		--	  ,ISNULL(cast([StandardizedProductName] as VARCHAR(120)),'(Overall)') [StandardizedProductName]
 		from (
 				select   l.Id,l.CreatedAt,l.CustomerKey,l.Amount
 						,ISNULL(cast(PaymentType as int),-100)				 PaymentType
-						,ISNULL(cast(l.CompanyId  as int),-100)				 CompanyId
-			--			,ISNULL(cast(l.[StandardizedProductName] as VARCHAR(120)),'N/A')	[StandardizedProductName]
+						,ISNULL(cast(l.CompanyId as int),-100)				 CompanyId
+			--			,ISNULL(cast(l.[StandardizedProductName] as VARCHAR(120)),'N/A') [StandardizedProductName]
 			--			,UTH.CustomerType
 			--			,ROW_NUMBER() OVER (PARTITION BY UTH.CustomerKey ORDER BY UTH.CreatedAt DESC) CustomerTypeHistoryRanker
 						,DATEDIFF(MINUTE,U.CreatedAt,l.CreatedAt)/(365.25*24*60)		  TenureByYear		
@@ -128,35 +128,35 @@ WITH CustomerBasedCTE AS
 						,SUM(SUM(TxCount))			  OVER (PARTITION BY [Date]PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) TxCountDTH
 						,SUM(SUM(ABS(TotalVolume)))	  OVER (PARTITION BY [Date]PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) TxVolumeDTH
 						,SUM(Age)/count(case when Age IS NOT NULL THEN 1 else NULL END) AvgAgeHourly
-						,AVG(TenureByYear)												AvgTenureByYearHourly
+						,AVG(TenureByYear)						AvgTenureByYearHourly
 						,SUM(SUM(Age))													   OVER (PARTITION BY YEAR([Date]),MONTH([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)*1.0 / 
-								SUM(count(case when Age IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date]),MONTH([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) AvgAgeDTH
+								SUM(count(case when Age IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date]),MONTH([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) 								 AvgAgeDTH
 						,SUM(SUM(Age))													   OVER (PARTITION BY YEAR([Date]),MONTH([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)*1.0 / 
-								SUM(count(case when Age IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date]),MONTH([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) AvgAgeMTD
+								SUM(count(case when Age IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date]),MONTH([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)								 AvgAgeMTD
 						,SUM(SUM(Age))													   OVER (PARTITION BY YEAR([Date]),QuarterNumberPaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)*1.0 / 
-								SUM(count(case when Age IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date]),QuarterNumberPaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) AvgAgeQTD
+								SUM(count(case when Age IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date]),QuarterNumberPaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)								 AvgAgeQTD
 						,SUM(SUM(Age))													   OVER (PARTITION BY YEAR([Date]),SemiYearIndicatorPaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)*1.0 / 
-								SUM(count(case when Age IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date]),SemiYearIndicatorPaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) AvgAgeSemiYTD
+								SUM(count(case when Age IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date]),SemiYearIndicatorPaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)								 AvgAgeSemiYTD
 						,SUM(SUM(Age))													   OVER (PARTITION BY YEAR([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)*1.0 / 
-								SUM(count(case when Age IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) AvgAgeYTD
+								SUM(count(case when Age IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)										AvgAgeYTD
 						,SUM(SUM(TenureByYear))														OVER (PARTITION BY YEAR([Date]),MONTH([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)*1.0 / 
-								SUM(count(case when TenureByYear IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date]),MONTH([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) AvgTenureByYearDTH
+								SUM(count(case when TenureByYear IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date]),MONTH([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) 							AvgTenureByYearDTH
 						,SUM(SUM(TenureByYear))														OVER (PARTITION BY YEAR([Date]),MONTH([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)*1.0 / 
-								SUM(count(case when TenureByYear IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date]),MONTH([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) AvgTenureByYearMTD
+								SUM(count(case when TenureByYear IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date]),MONTH([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) 							AvgTenureByYearMTD
 						,SUM(SUM(TenureByYear))														OVER (PARTITION BY YEAR([Date]),QuarterNumberPaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)*1.0 / 
-								SUM(count(case when TenureByYear IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date]),QuarterNumberPaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) AvgTenureByYearQTD
+								SUM(count(case when TenureByYear IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date]),QuarterNumberPaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)							AvgTenureByYearQTD
 						,SUM(SUM(TenureByYear))														OVER (PARTITION BY YEAR([Date]),SemiYearIndicatorPaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)*1.0 / 
-								SUM(count(case when TenureByYear IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date]),SemiYearIndicatorPaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) AvgTenureByYearSemiYTD
+								SUM(count(case when TenureByYear IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date]),SemiYearIndicatorPaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) 						AvgTenureByYearSemiYTD
 						,SUM(SUM(TenureByYear))														OVER (PARTITION BY YEAR([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)*1.0 / 
-								SUM(count(case when TenureByYear IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) AvgTenureByYearYTD
-						,SUM(SUM(TxCount))			OVER (PARTITION BY YEAR([Date]),MONTH([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) TxCountMTD
-						,SUM(SUM(ABS(TotalVolume))) OVER (PARTITION BY YEAR([Date]),MONTH([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) TxVolumeMTD
-						,SUM(SUM(TxCount))			OVER (PARTITION BY YEAR([Date]),QuarterNumber,				PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) TxCountQTD
-						,SUM(SUM(ABS(TotalVolume))) OVER (PARTITION BY YEAR([Date]),QuarterNumber,				PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) TxVolumeQTD
-						,SUM(SUM(TxCount))			OVER (PARTITION BY YEAR([Date]),SemiYearIndicator,			PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) TxCountSemiYTD
-						,SUM(SUM(ABS(TotalVolume))) OVER (PARTITION BY YEAR([Date]),SemiYearIndicator,			PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) TxVolumeSemiYTD
-						,SUM(SUM(TxCount))			OVER (PARTITION BY YEAR([Date]),							PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) TxCountYTD
-						,SUM(SUM(ABS(TotalVolume))) OVER (PARTITION BY YEAR([Date]),							PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) TxVolumeYTD
+								SUM(count(case when TenureByYear IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) 									AvgTenureByYearYTD
+						,SUM(SUM(TxCount))			OVER (PARTITION BY YEAR([Date]),MONTH([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)													TxCountMTD
+						,SUM(SUM(ABS(TotalVolume))) OVER (PARTITION BY YEAR([Date]),MONTH([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) 														TxVolumeMTD
+						,SUM(SUM(TxCount))			OVER (PARTITION BY YEAR([Date]),QuarterNumber,				PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) 									TxCountQTD
+						,SUM(SUM(ABS(TotalVolume))) OVER (PARTITION BY YEAR([Date]),QuarterNumber,				PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) 										TxVolumeQTD
+						,SUM(SUM(TxCount))			OVER (PARTITION BY YEAR([Date]),SemiYearIndicator,			PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) 									TxCountSemiYTD
+						,SUM(SUM(ABS(TotalVolume))) OVER (PARTITION BY YEAR([Date]),SemiYearIndicator,			PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)											TxVolumeSemiYTD
+						,SUM(SUM(TxCount))			OVER (PARTITION BY YEAR([Date]),							PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) 							TxCountYTD
+						,SUM(SUM(ABS(TotalVolume))) OVER (PARTITION BY YEAR([Date]),							PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)									TxVolumeYTD
 						--,SUM(SUM(Age))													   OVER (PARTITION BY YEAR([Date]),Indicator_2MTDPaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)*1.0 / 
 						--		SUM(count(case when Age IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date]),Indicator_2MTDPaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) AvgAge2MTD
 
@@ -245,7 +245,7 @@ WITH CustomerBasedCTE AS
  , DailyWithSemiYTDForUU AS
 (
 					SELECT  ContributedDateHour
-						   PaymentType
+						   ,PaymentType
 						   ,CompanyId
 						   /*,[StandardizedProductName]*/
 						   /*,CustomerType*/
@@ -256,7 +256,7 @@ WITH CustomerBasedCTE AS
 								 
 								 ContributedDateHour
 								,CustomerKey
-								PaymentType
+								,PaymentType
 								,CompanyId
 								/*,[StandardizedProductName]*/
 								/*,CustomerType*/
@@ -266,7 +266,7 @@ WITH CustomerBasedCTE AS
 									select MIN(ContributedDateHour) ContributedDateHour
 										  ,MIN([Date]) [Date]
 										  ,CustomerKey
-										  PaymentType
+										  ,PaymentType
 										  ,CompanyId
 										  /*,[StandardizedProductName]*/
 										  /*,CustomerType*/
@@ -281,7 +281,7 @@ WITH CustomerBasedCTE AS
  , DailyWithMTDForUU  AS
 				    (
 					SELECT  ContributedDateHour
-						   PaymentType
+						   ,PaymentType
 						   ,CompanyId
 						   /*,[StandardizedProductName]*/
 						   /*,CustomerType*/
@@ -291,7 +291,7 @@ WITH CustomerBasedCTE AS
 							select
 								 ContributedDateHour
 								,CustomerKey
-								PaymentType
+								,PaymentType
 								,CompanyId
 								/*,[StandardizedProductName]*/
 								/*,CustomerType*/
@@ -301,7 +301,7 @@ WITH CustomerBasedCTE AS
 									select MIN(ContributedDateHour) ContributedDateHour
 										  ,MIN([Date]) [Date]
 										  ,CustomerKey
-										  PaymentType
+										  ,PaymentType
 										  ,CompanyId
 										  /*,[StandardizedProductName]*/
 										  /*,CustomerType*/
@@ -316,7 +316,7 @@ WITH CustomerBasedCTE AS
  /*, DailyWith2MTDForUU  AS
 				    (
 					SELECT  ContributedDateHour
-						   PaymentType
+						   ,PaymentType
 						   ,CompanyId
 						   /*,[StandardizedProductName]*/
 						   /*,CustomerType*/
@@ -351,7 +351,7 @@ WITH CustomerBasedCTE AS
  , DailyWithYTDForUU  AS
 				    (
 					SELECT ContributedDateHour
-						   PaymentType
+						   ,PaymentType
 						   ,CompanyId
 						   /*,[StandardizedProductName]*/
 						   /*,CustomerType*/
@@ -361,7 +361,7 @@ WITH CustomerBasedCTE AS
 							select
 								 ContributedDateHour
 								,CustomerKey
-								PaymentType
+								,PaymentType
 								,CompanyId
 								/*,[StandardizedProductName]*/
 								/*,CustomerType*/
@@ -371,7 +371,7 @@ WITH CustomerBasedCTE AS
 									select MIN(ContributedDateHour) ContributedDateHour
 										  ,MIN([Date]) [Date]
 										  ,CustomerKey
-										  PaymentType
+										  ,PaymentType
 										  ,CompanyId
 										  /*,[StandardizedProductName]*/
 										  /*,CustomerType*/
@@ -386,7 +386,7 @@ WITH CustomerBasedCTE AS
  , DailyWith2YTDForUU  AS
 				    (
 					SELECT ContributedDateHour
-						   PaymentType
+						   ,PaymentType
 						   ,CompanyId
 						   /*,[StandardizedProductName]*/
 						   /*,CustomerType*/
@@ -396,7 +396,7 @@ WITH CustomerBasedCTE AS
 							select
 								 ContributedDateHour
 								,CustomerKey
-								PaymentType
+								,PaymentType
 								,CompanyId
 								/*,[StandardizedProductName]*/
 								/*,CustomerType*/
@@ -406,7 +406,7 @@ WITH CustomerBasedCTE AS
 									select MIN(ContributedDateHour) ContributedDateHour
 										  ,MIN([Date]) [Date]
 										  ,CustomerKey
-										  PaymentType
+										  ,PaymentType
 										  ,CompanyId
 										  /*,[StandardizedProductName]*/
 										  /*,CustomerType*/
@@ -421,7 +421,7 @@ WITH CustomerBasedCTE AS
  , DailyWith3YTDForUU  AS
 				    (
 					SELECT ContributedDateHour
-						   PaymentType
+						   ,PaymentType
 						   ,CompanyId
 						   /*,[StandardizedProductName]*/
 						   /*,CustomerType*/
@@ -431,7 +431,7 @@ WITH CustomerBasedCTE AS
 							select
 								 ContributedDateHour
 								,CustomerKey
-								PaymentType
+								,PaymentType
 								,CompanyId
 								/*,[StandardizedProductName]*/
 								/*,CustomerType*/
@@ -441,7 +441,7 @@ WITH CustomerBasedCTE AS
 									select MIN(ContributedDateHour) ContributedDateHour
 										  ,MIN([Date]) [Date]
 										  ,CustomerKey
-										  PaymentType
+										  ,PaymentType
 										  ,CompanyId
 										  /*,[StandardizedProductName]*/
 										  /*,CustomerType*/
@@ -456,7 +456,7 @@ WITH CustomerBasedCTE AS
  , DailyWithFeatureLaunchedTDForUU  AS
 				    (
 					SELECT ContributedDateHour
-						   PaymentType
+						   ,PaymentType
 						   ,CompanyId
 						   /*,[StandardizedProductName]*/
 						   /*,CustomerType*/
@@ -466,7 +466,7 @@ WITH CustomerBasedCTE AS
 							select
 								 ContributedDateHour
 								,CustomerKey
-								PaymentType
+								,PaymentType
 								,CompanyId
 								/*,[StandardizedProductName]*/
 								/*,CustomerType*/
@@ -476,7 +476,7 @@ WITH CustomerBasedCTE AS
 									select MIN(ContributedDateHour) ContributedDateHour
 										  ,MIN([Date]) [Date]
 										  ,CustomerKey
-										  PaymentType
+										  ,PaymentType
 										  ,CompanyId
 										  /*,[StandardizedProductName]*/
 										  /*,CustomerType*/
@@ -491,8 +491,8 @@ WITH CustomerBasedCTE AS
 , CrossJoiningWithLargestCTEPart_DailyWithYTDForUU AS
 		(
 		SELECT 
-			DH.HourlyDateTime [DateHour],CompanyId/*,CustomerType*//*,Product*/PaymentType
-		FROM (SELECT DISTINCT CompanyId/*,CustomerType*//*,Product*/PaymentType FROM DailyWithYTDForUU WHERE ContributedDateHour >= @StartDate AND ContributedDateHour < @BaseDay) x
+			DH.HourlyDateTime [DateHour],CompanyId/*,CustomerType*//*,Product*/,PaymentType
+		FROM (SELECT DISTINCT CompanyId/*,CustomerType*//*,Product*/,PaymentType FROM DailyWithYTDForUU WHERE ContributedDateHour >= @StartDate AND ContributedDateHour < @BaseDay) x
 		CROSS JOIN #TempDateHours DH WITH (NOLOCK)
 		WHERE DH.HourlyDateTime >= @StartDate AND DH.HourlyDateTime < @BaseDay
 		)
@@ -595,10 +595,10 @@ PRINT ('7.1-UUMTD LOOP SETTINGS PREPARING - STARTED - FOR' + 'DailySP Date : '+c
 			SET UUMTD = ISNULL(IIF(@DailySP = @Param_MTDIndicator,0,L.UUMTD),0)
 		FROM  #ReadyToUpdateData K
 		LEFT JOIN  (
-					SELECT MAX(UUMTD) UUMTD,CompanyId/*,Product*/PaymentType /*,CustomerType*/
+					SELECT MAX(UUMTD) UUMTD,CompanyId/*,Product*/,PaymentType /*,CustomerType*/
 					FROM #ReadyToUpdateData
 					WHERE DateHour < @DailySP AND UUMTD IS NOT NULL and DateHour >= @Param_MTDIndicator
-					GROUP BY CompanyId/*,Product*/PaymentType
+					GROUP BY CompanyId/*,Product*/,PaymentType
 					) L
 		ON K.CompanyId = L.CompanyId AND /*K.Product = L.Product AND*/ K.PaymentType = L.PaymentType /*AND K.CustomerType = L.CustomerType*/
 		WHERE K.UUMTD is null AND K.DateHour = @DailySP
@@ -608,10 +608,10 @@ PRINT ('8.1-TxCountMTD LOOP SETTINGS PREPARING - STARTED - FOR' + 'DailySP Date 
 			SET TxCountMTD = ISNULL(IIF(@DailySP = @Param_MTDIndicator,0,L.TxCountMTD),0)
 		FROM  #ReadyToUpdateData K
 		LEFT JOIN  (
-					SELECT MAX(TxCountMTD) TxCountMTD,CompanyId/*,Product*/PaymentType /*,CustomerType*/
+					SELECT MAX(TxCountMTD) TxCountMTD,CompanyId/*,Product*/,PaymentType /*,CustomerType*/
 					FROM #ReadyToUpdateData
 					WHERE DateHour < @DailySP AND TxCountMTD IS NOT NULL and DateHour >= @Param_MTDIndicator
-					GROUP BY CompanyId/*,Product*/PaymentType
+					GROUP BY CompanyId/*,Product*/,PaymentType
 					) L
 		ON K.CompanyId = L.CompanyId /*AND K.Product = L.Product*/ AND K.PaymentType = L.PaymentType /*AND K.CustomerType = L.CustomerType*/
 		WHERE K.TxCountMTD is null AND K.DateHour = @DailySP
@@ -621,10 +621,10 @@ PRINT ('9.1-TxVolumeMTD LOOP SETTINGS PREPARING - STARTED - FOR' + 'DailySP Date
 			SET TxVolumeMTD = ISNULL(IIF(@DailySP = @Param_MTDIndicator,0,L.TxVolumeMTD),0)
 		FROM  #ReadyToUpdateData K
 		LEFT JOIN  (
-					SELECT MAX(TxVolumeMTD) TxVolumeMTD,CompanyId/*,Product*/PaymentType /*,CustomerType*/
+					SELECT MAX(TxVolumeMTD) TxVolumeMTD,CompanyId/*,Product*/,PaymentType /*,CustomerType*/
 					FROM #ReadyToUpdateData
 					WHERE DateHour < @DailySP AND TxVolumeMTD IS NOT NULL and DateHour >= @Param_MTDIndicator
-					GROUP BY CompanyId/*,Product*/PaymentType
+					GROUP BY CompanyId/*,Product*/,PaymentType
 					) L
 		ON K.CompanyId = L.CompanyId /*AND K.Product = L.Product*/ AND K.PaymentType = L.PaymentType /*AND K.CustomerType = L.CustomerType*/
 		WHERE K.TxVolumeMTD is null AND K.DateHour = @DailySP
@@ -634,10 +634,10 @@ PRINT ('10.1-UUQTD LOOP SETTINGS PREPARING - STARTED - FOR' + 'DailySP Date : '+
 			SET UUQTD = ISNULL(IIF(@DailySP = @Param_QTDIndicator ,0,L.UUQTD),0)
 		FROM  #ReadyToUpdateData K
 		LEFT JOIN  (
-					SELECT MAX(UUQTD) UUQTD,CompanyId/*,Product*/PaymentType /*,CustomerType*/
+					SELECT MAX(UUQTD) UUQTD,CompanyId/*,Product*/,PaymentType /*,CustomerType*/
 					FROM #ReadyToUpdateData
 					WHERE DateHour < @DailySP AND UUQTD IS NOT NULL and DateHour >= @Param_QTDIndicator
-					GROUP BY CompanyId/*,Product*/PaymentType
+					GROUP BY CompanyId/*,Product*/,PaymentType
 					) L
 		ON K.CompanyId = L.CompanyId /*AND K.Product = L.Product*/ AND K.PaymentType = L.PaymentType /*AND K.CustomerType = L.CustomerType*/
 		WHERE K.UUQTD is null AND K.DateHour = @DailySP
@@ -647,10 +647,10 @@ PRINT ('11.1-TxCountQTD LOOP SETTINGS PREPARING - STARTED - FOR' + 'DailySP Date
 			SET TxCountQTD = ISNULL(IIF(@DailySP = @Param_QTDIndicator ,0,L.TxCountQTD),0)
 		FROM  #ReadyToUpdateData K
 		LEFT JOIN  (
-					SELECT MAX(TxCountQTD) TxCountQTD,CompanyId/*,Product*/PaymentType /*,CustomerType*/
+					SELECT MAX(TxCountQTD) TxCountQTD,CompanyId/*,Product*/,PaymentType /*,CustomerType*/
 					FROM #ReadyToUpdateData
 					WHERE DateHour < @DailySP AND TxCountQTD IS NOT NULL and DateHour >= @Param_QTDIndicator
-					GROUP BY CompanyId/*,Product*/PaymentType
+					GROUP BY CompanyId/*,Product*/,PaymentType
 					) L
 		ON K.CompanyId = L.CompanyId /*AND K.Product = L.Product*/ AND K.PaymentType = L.PaymentType /*AND K.CustomerType = L.CustomerType*/
 		WHERE K.TxCountQTD is null AND K.DateHour = @DailySP
@@ -660,10 +660,10 @@ PRINT ('12.1-TxVolumeQTD LOOP SETTINGS PREPARING - STARTED - FOR' + 'DailySP Dat
 			SET TxVolumeQTD = ISNULL(IIF(@DailySP = @Param_QTDIndicator ,0,L.TxVolumeQTD),0)
 		FROM  #ReadyToUpdateData K
 		LEFT JOIN  (
-					SELECT MAX(TxVolumeQTD) TxVolumeQTD,CompanyId/*,Product*/PaymentType /*,CustomerType*/
+					SELECT MAX(TxVolumeQTD) TxVolumeQTD,CompanyId/*,Product*/,PaymentType /*,CustomerType*/
 					FROM #ReadyToUpdateData
 					WHERE DateHour < @DailySP AND TxVolumeQTD IS NOT NULL and DateHour >= @Param_QTDIndicator
-					GROUP BY CompanyId/*,Product*/PaymentType
+					GROUP BY CompanyId/*,Product*/,PaymentType
 					) L
 		ON K.CompanyId = L.CompanyId /*AND K.Product = L.Product*/ AND K.PaymentType = L.PaymentType /*AND K.CustomerType = L.CustomerType*/
 		WHERE K.TxVolumeQTD is null AND K.DateHour = @DailySP
@@ -673,10 +673,10 @@ PRINT ('13.1-UUSemiYTD LOOP SETTINGS PREPARING - STARTED - FOR' + 'DailySP Date 
 			SET UUSemiYTD = ISNULL(IIF(@DailySP = @Param_SemiYTDIndicator,0,L.UUSemiYTD),0)
 		FROM  #ReadyToUpdateData K
 		LEFT JOIN  (
-					SELECT MAX(UUSemiYTD) UUSemiYTD,CompanyId/*,Product*/PaymentType /*,CustomerType*/
+					SELECT MAX(UUSemiYTD) UUSemiYTD,CompanyId/*,Product*/,PaymentType /*,CustomerType*/
 					FROM #ReadyToUpdateData
 					WHERE DateHour < @DailySP AND UUSemiYTD IS NOT NULL and DateHour >= @Param_SemiYTDIndicator
-					GROUP BY CompanyId/*,Product*/PaymentType
+					GROUP BY CompanyId/*,Product*/,PaymentType
 					) L
 		ON K.CompanyId = L.CompanyId /*AND K.Product = L.Product*/ AND K.PaymentType = L.PaymentType /*AND K.CustomerType = L.CustomerType*/
 		WHERE K.UUSemiYTD is null AND K.DateHour = @DailySP
@@ -686,10 +686,10 @@ PRINT ('14.1-TxCountSemiYTD LOOP SETTINGS PREPARING - STARTED - FOR' + 'DailySP 
 			SET TxCountSemiYTD = ISNULL(IIF(@DailySP = @Param_SemiYTDIndicator,0,L.TxCountSemiYTD),0)
 		FROM  #ReadyToUpdateData K
 		LEFT JOIN  (
-					SELECT MAX(TxCountSemiYTD) TxCountSemiYTD,CompanyId/*,Product*/PaymentType /*,CustomerType*/
+					SELECT MAX(TxCountSemiYTD) TxCountSemiYTD,CompanyId/*,Product*/,PaymentType /*,CustomerType*/
 					FROM #ReadyToUpdateData
 					WHERE DateHour < @DailySP AND TxCountSemiYTD IS NOT NULL and DateHour >= @Param_SemiYTDIndicator
-					GROUP BY CompanyId/*,Product*/PaymentType
+					GROUP BY CompanyId/*,Product*/,PaymentType
 					) L
 		ON K.CompanyId = L.CompanyId /*AND K.Product = L.Product*/ AND K.PaymentType = L.PaymentType /*AND K.CustomerType = L.CustomerType*/
 		WHERE K.TxCountSemiYTD is null AND K.DateHour = @DailySP
@@ -699,10 +699,10 @@ PRINT ('15.1-TxVolumeSemiYTD LOOP SETTINGS PREPARING - STARTED - FOR' + 'DailySP
 			SET TxVolumeSemiYTD = ISNULL(IIF(@DailySP = @Param_SemiYTDIndicator,0,L.TxVolumeSemiYTD),0)
 		FROM  #ReadyToUpdateData K
 		LEFT JOIN  (
-					SELECT MAX(TxVolumeSemiYTD) TxVolumeSemiYTD,CompanyId/*,Product*/PaymentType /*,CustomerType*/
+					SELECT MAX(TxVolumeSemiYTD) TxVolumeSemiYTD,CompanyId/*,Product*/,PaymentType /*,CustomerType*/
 					FROM #ReadyToUpdateData
 					WHERE DateHour < @DailySP AND TxVolumeSemiYTD IS NOT NULL and DateHour >= @Param_SemiYTDIndicator
-					GROUP BY CompanyId/*,Product*/PaymentType
+					GROUP BY CompanyId/*,Product*/,PaymentType
 					) L
 		ON K.CompanyId = L.CompanyId /*AND K.Product = L.Product*/ AND K.PaymentType = L.PaymentType /*AND K.CustomerType = L.CustomerType*/
 		WHERE K.TxVolumeSemiYTD is null AND K.DateHour = @DailySP
@@ -712,10 +712,10 @@ PRINT ('16.1-UUYTD LOOP SETTINGS PREPARING - STARTED - FOR' + 'DailySP Date : '	
 			SET UUYTD = ISNULL(IIF(@DailySP = @Param_YTDIndicator,0,L.UUYTD),0)
 		FROM  #ReadyToUpdateData K
 		LEFT JOIN  (
-					SELECT MAX(UUYTD) UUYTD,CompanyId/*,Product*/PaymentType /*,CustomerType*/
+					SELECT MAX(UUYTD) UUYTD,CompanyId/*,Product*/,PaymentType /*,CustomerType*/
 					FROM #ReadyToUpdateData
 					WHERE DateHour < @DailySP AND UUYTD IS NOT NULL and DateHour >= @Param_YTDIndicator
-					GROUP BY CompanyId/*,Product*/PaymentType
+					GROUP BY CompanyId/*,Product*/,PaymentType
 					) L
 		ON K.CompanyId = L.CompanyId /*AND K.Product = L.Product*/ AND K.PaymentType = L.PaymentType /*AND K.CustomerType = L.CustomerType*/
 		WHERE K.UUYTD is null AND K.DateHour = @DailySP
@@ -725,10 +725,10 @@ PRINT ('17.1-TxCountYTD LOOP SETTINGS PREPARING - STARTED - FOR' + 'DailySP Date
 			SET TxCountYTD = ISNULL(IIF(@DailySP = @Param_YTDIndicator,0,L.TxCountYTD),0)
 		FROM  #ReadyToUpdateData K
 		LEFT JOIN  (
-					SELECT MAX(TxCountYTD) TxCountYTD,CompanyId/*,Product*/PaymentType /*,CustomerType*/
+					SELECT MAX(TxCountYTD) TxCountYTD,CompanyId/*,Product*/,PaymentType /*,CustomerType*/
 					FROM #ReadyToUpdateData
 					WHERE DateHour < @DailySP AND TxCountYTD IS NOT NULL and DateHour >= @Param_YTDIndicator
-					GROUP BY CompanyId/*,Product*/PaymentType
+					GROUP BY CompanyId/*,Product*/,PaymentType
 					) L
 		ON K.CompanyId = L.CompanyId /*AND K.Product = L.Product*/ AND K.PaymentType = L.PaymentType /*AND K.CustomerType = L.CustomerType*/
 		WHERE K.TxCountYTD is null AND K.DateHour = @DailySP
@@ -738,10 +738,10 @@ PRINT ('18.1-TxVolumeYTD LOOP SETTINGS PREPARING - STARTED - FOR' + 'DailySP Dat
 			SET TxVolumeYTD = ISNULL(IIF(@DailySP = @Param_YTDIndicator,0,L.TxVolumeYTD),0)
 		FROM  #ReadyToUpdateData K
 		LEFT JOIN  (
-					SELECT MAX(TxVolumeYTD) TxVolumeYTD,CompanyId/*,Product*/PaymentType /*,CustomerType*/
+					SELECT MAX(TxVolumeYTD) TxVolumeYTD,CompanyId/*,Product*/,PaymentType /*,CustomerType*/
 					FROM #ReadyToUpdateData
 					WHERE DateHour < @DailySP AND TxVolumeYTD IS NOT NULL and DateHour >= @Param_YTDIndicator
-					GROUP BY CompanyId/*,Product*/PaymentType
+					GROUP BY CompanyId/*,Product*/,PaymentType
 					) L
 		ON K.CompanyId = L.CompanyId /*AND K.Product = L.Product*/ AND K.PaymentType = L.PaymentType /*AND K.CustomerType = L.CustomerType*/
 		WHERE K.TxVolumeYTD is null AND K.DateHour = @DailySP
@@ -756,10 +756,10 @@ PRINT ('19.1-AvgAgeMTD LOOP SETTINGS PREPARING - STARTED - FOR' + 'DailySP Date 
 					from #ReadyToUpdateData P
 					Join
 						(
-							SELECT MAX(DateHour) MaxDateHour,CompanyId/*,Product*/PaymentType /*,CustomerType*/
+							SELECT MAX(DateHour) MaxDateHour,CompanyId/*,Product*/,PaymentType /*,CustomerType*/
 							FROM #ReadyToUpdateData
 							WHERE DateHour < @DailySP AND AvgAgeMTD IS NOT NULL and DateHour >= @Param_MTDIndicator
-							GROUP BY CompanyId/*,Product*/PaymentType
+							GROUP BY CompanyId/*,Product*/,PaymentType
 						) M ON M.MaxDateHour = P.DateHour AND M.PaymentType = P.PaymentType AND M.CompanyId = P.CompanyId
 					) L
 		ON K.CompanyId = L.CompanyId /*AND K.Product = L.Product*/ AND K.PaymentType = L.PaymentType /*AND K.CustomerType = L.CustomerType*/
@@ -775,10 +775,10 @@ PRINT ('20.1-AvgAgeQTD LOOP SETTINGS PREPARING - STARTED - FOR' + 'DailySP Date 
 					from #ReadyToUpdateData P
 					Join
 						(
-							SELECT MAX(DateHour) MaxDateHour,CompanyId/*,Product*/PaymentType /*,CustomerType*/
+							SELECT MAX(DateHour) MaxDateHour,CompanyId/*,Product*/,PaymentType /*,CustomerType*/
 							FROM #ReadyToUpdateData
 							WHERE DateHour < @DailySP AND AvgAgeQTD IS NOT NULL and DateHour >= @Param_QTDIndicator
-							GROUP BY CompanyId/*,Product*/PaymentType
+							GROUP BY CompanyId/*,Product*/,PaymentType
 						) M ON M.MaxDateHour = P.DateHour AND M.PaymentType = P.PaymentType AND M.CompanyId = P.CompanyId
 					) L
 		ON K.CompanyId = L.CompanyId /*AND K.Product = L.Product*/ AND K.PaymentType = L.PaymentType /*AND K.CustomerType = L.CustomerType*/
@@ -794,10 +794,10 @@ PRINT ('21.1-AvgAgeSemiYTD LOOP SETTINGS PREPARING - STARTED - FOR' + 'DailySP D
 					from #ReadyToUpdateData P
 					Join
 						(
-							SELECT MAX(DateHour) MaxDateHour,CompanyId/*,Product*/PaymentType /*,CustomerType*/
+							SELECT MAX(DateHour) MaxDateHour,CompanyId/*,Product*/,PaymentType /*,CustomerType*/
 							FROM #ReadyToUpdateData
 							WHERE DateHour < @DailySP AND AvgAgeSemiYTD IS NOT NULL and DateHour >= @Param_SemiYTDIndicator
-							GROUP BY CompanyId/*,Product*/PaymentType
+							GROUP BY CompanyId/*,Product*/,PaymentType
 						) M ON M.MaxDateHour = P.DateHour AND M.PaymentType = P.PaymentType AND M.CompanyId = P.CompanyId
 					) L
 		ON K.CompanyId = L.CompanyId /*AND K.Product = L.Product*/ AND K.PaymentType = L.PaymentType /*AND K.CustomerType = L.CustomerType*/
@@ -813,10 +813,10 @@ PRINT ('22.1-AvgAgeYTD LOOP SETTINGS PREPARING - STARTED - FOR' + 'DailySP Date 
 					from #ReadyToUpdateData P
 					Join
 						(
-							SELECT MAX(DateHour) MaxDateHour,CompanyId/*,Product*/PaymentType /*,CustomerType*/
+							SELECT MAX(DateHour) MaxDateHour,CompanyId/*,Product*/,PaymentType /*,CustomerType*/
 							FROM #ReadyToUpdateData
 							WHERE DateHour < @DailySP AND AvgAgeYTD IS NOT NULL and DateHour >= @Param_YTDIndicator
-							GROUP BY CompanyId/*,Product*/PaymentType
+							GROUP BY CompanyId/*,Product*/,PaymentType
 						) M ON M.MaxDateHour = P.DateHour AND M.PaymentType = P.PaymentType AND M.CompanyId = P.CompanyId
 					) L
 		ON K.CompanyId = L.CompanyId /*AND K.Product = L.Product*/ AND K.PaymentType = L.PaymentType /*AND K.CustomerType = L.CustomerType*/
@@ -832,10 +832,10 @@ PRINT ('23.1-AvgTenureByYearMTD LOOP SETTINGS PREPARING - STARTED - FOR' + 'Dail
 					from #ReadyToUpdateData P
 					Join
 						(
-							SELECT MAX(DateHour) MaxDateHour,CompanyId/*,Product*/PaymentType /*,CustomerType*/
+							SELECT MAX(DateHour) MaxDateHour,CompanyId/*,Product*/,PaymentType /*,CustomerType*/
 							FROM #ReadyToUpdateData
 							WHERE DateHour < @DailySP AND AvgTenureByYearMTD IS NOT NULL and DateHour >= @Param_MTDIndicator
-							GROUP BY CompanyId/*,Product*/PaymentType
+							GROUP BY CompanyId/*,Product*/,PaymentType
 						) M ON M.MaxDateHour = P.DateHour AND M.PaymentType = P.PaymentType AND M.CompanyId = P.CompanyId
 					) L
 		ON K.CompanyId = L.CompanyId /*AND K.Product = L.Product*/ AND K.PaymentType = L.PaymentType /*AND K.CustomerType = L.CustomerType*/
@@ -851,10 +851,10 @@ PRINT ('24.1-AvgTenureByYearQTD LOOP SETTINGS PREPARING - STARTED - FOR' + 'Dail
 					from #ReadyToUpdateData P
 					Join
 						(
-							SELECT MAX(DateHour) MaxDateHour,CompanyId/*,Product*/PaymentType /*,CustomerType*/
+							SELECT MAX(DateHour) MaxDateHour,CompanyId/*,Product*/,PaymentType /*,CustomerType*/
 							FROM #ReadyToUpdateData
 							WHERE DateHour < @DailySP AND AvgTenureByYearQTD IS NOT NULL and DateHour >= @Param_QTDIndicator
-							GROUP BY CompanyId/*,Product*/PaymentType
+							GROUP BY CompanyId/*,Product*/,PaymentType
 						) M ON M.MaxDateHour = P.DateHour AND M.PaymentType = P.PaymentType AND M.CompanyId = P.CompanyId
 					) L
 		ON K.CompanyId = L.CompanyId /*AND K.Product = L.Product*/ AND K.PaymentType = L.PaymentType /*AND K.CustomerType = L.CustomerType*/
@@ -870,10 +870,10 @@ PRINT ('25.1-AvgTenureByYearSemiYTD LOOP SETTINGS PREPARING - STARTED - FOR' + '
 					from #ReadyToUpdateData P
 					Join
 						(
-							SELECT MAX(DateHour) MaxDateHour,CompanyId/*,Product*/PaymentType /*,CustomerType*/
+							SELECT MAX(DateHour) MaxDateHour,CompanyId/*,Product*/,PaymentType /*,CustomerType*/
 							FROM #ReadyToUpdateData
 							WHERE DateHour < @DailySP AND AvgTenureByYearSemiYTD IS NOT NULL and DateHour >= @Param_SemiYTDIndicator
-							GROUP BY CompanyId/*,Product*/PaymentType
+							GROUP BY CompanyId/*,Product*/,PaymentType
 						) M ON M.MaxDateHour = P.DateHour AND M.PaymentType = P.PaymentType AND M.CompanyId = P.CompanyId
 					) L
 		ON K.CompanyId = L.CompanyId /*AND K.Product = L.Product*/ AND K.PaymentType = L.PaymentType /*AND K.CustomerType = L.CustomerType*/
@@ -889,10 +889,10 @@ PRINT ('26.1-AvgTenureByYearYTD LOOP SETTINGS PREPARING - STARTED - FOR' + 'Dail
 					from #ReadyToUpdateData P
 					Join
 						(
-							SELECT MAX(DateHour) MaxDateHour,CompanyId/*,Product*/PaymentType /*,CustomerType*/
+							SELECT MAX(DateHour) MaxDateHour,CompanyId/*,Product*/,PaymentType /*,CustomerType*/
 							FROM #ReadyToUpdateData
 							WHERE DateHour < @DailySP AND AvgTenureByYearYTD IS NOT NULL and DateHour >= @Param_YTDIndicator
-							GROUP BY CompanyId/*,Product*/PaymentType
+							GROUP BY CompanyId/*,Product*/,PaymentType
 						) M ON M.MaxDateHour = P.DateHour AND M.PaymentType = P.PaymentType AND M.CompanyId = P.CompanyId
 					) L
 		ON K.CompanyId = L.CompanyId /*AND K.Product = L.Product*/ AND K.PaymentType = L.PaymentType /*AND K.CustomerType = L.CustomerType*/
@@ -909,10 +909,10 @@ PRINT ('27.1-AvgTenureByYear2MTD LOOP SETTINGS PREPARING - STARTED - FOR' + 'Dai
 					from #ReadyToUpdateData P
 					Join
 						(
-							SELECT MAX(DateHour) MaxDateHour,CompanyId/*,Product*/PaymentType /*,CustomerType*/
+							SELECT MAX(DateHour) MaxDateHour,CompanyId/*,Product*/,PaymentType /*,CustomerType*/
 							FROM #ReadyToUpdateData
 							WHERE DateHour < @DailySP AND AvgTenureByYear2MTD IS NOT NULL
-							GROUP BY CompanyId/*,Product*/PaymentType
+							GROUP BY CompanyId/*,Product*/,PaymentType
 						) M ON M.MaxDateHour = P.DateHour AND M.PaymentType = P.PaymentType AND M.CompanyId = P.CompanyId
 					) L
 		ON K.CompanyId = L.CompanyId /*AND K.Product = L.Product*/ AND K.PaymentType = L.PaymentType /*AND K.CustomerType = L.CustomerType*/
@@ -928,10 +928,10 @@ PRINT ('28.1-AvgAge2MTD LOOP SETTINGS PREPARING - STARTED - FOR' + 'DailySP Date
 					from #ReadyToUpdateData P
 					Join
 						(
-							SELECT MAX(DateHour) MaxDateHour,CompanyId/*,Product*/PaymentType /*,CustomerType*/
+							SELECT MAX(DateHour) MaxDateHour,CompanyId/*,Product*/,PaymentType /*,CustomerType*/
 							FROM #ReadyToUpdateData
 							WHERE DateHour < @DailySP AND AvgAge2MTD IS NOT NULL
-							GROUP BY CompanyId/*,Product*/PaymentType
+							GROUP BY CompanyId/*,Product*/,PaymentType
 						) M ON M.MaxDateHour = P.DateHour AND M.PaymentType = P.PaymentType AND M.CompanyId = P.CompanyId
 					) L
 		ON K.CompanyId = L.CompanyId /*AND K.Product = L.Product*/ AND K.PaymentType = L.PaymentType /*AND K.CustomerType = L.CustomerType*/
@@ -942,10 +942,10 @@ PRINT ('29.1-TxCount2MTD LOOP SETTINGS PREPARING - STARTED - FOR' + 'DailySP Dat
 			SET TxCount2MTD = ISNULL(IIF(@DailySP = @Param_2MTDIndicator,0,L.TxCount2MTD),0)
 		FROM  #ReadyToUpdateData K
 		LEFT JOIN  (
-					SELECT MAX(TxCount2MTD) TxCount2MTD,CompanyId/*,Product*/PaymentType /*,CustomerType*/
+					SELECT MAX(TxCount2MTD) TxCount2MTD,CompanyId/*,Product*/,PaymentType /*,CustomerType*/
 					FROM #ReadyToUpdateData
 					WHERE DateHour < @DailySP AND TxCount2MTD IS NOT NULL
-					GROUP BY CompanyId/*,Product*/PaymentType
+					GROUP BY CompanyId/*,Product*/,PaymentType
 					) L
 		ON K.CompanyId = L.CompanyId /*AND K.Product = L.Product*/ AND K.PaymentType = L.PaymentType /*AND K.CustomerType = L.CustomerType*/
 		WHERE K.TxCount2MTD is null AND K.DateHour = @DailySP
@@ -955,10 +955,10 @@ PRINT ('30.1-TxVolume2MTD LOOP SETTINGS PREPARING - STARTED - FOR' + 'DailySP Da
 			SET TxVolume2MTD = ISNULL(IIF(@DailySP = @Param_2MTDIndicator,0,L.TxVolume2MTD),0)
 		FROM  #ReadyToUpdateData K
 		LEFT JOIN  (
-					SELECT MAX(TxVolume2MTD) TxVolume2MTD,CompanyId/*,Product*/PaymentType /*,CustomerType*/
+					SELECT MAX(TxVolume2MTD) TxVolume2MTD,CompanyId/*,Product*/,PaymentType /*,CustomerType*/
 					FROM #ReadyToUpdateData
 					WHERE DateHour < @DailySP AND TxVolume2MTD IS NOT NULL
-					GROUP BY CompanyId/*,Product*/PaymentType
+					GROUP BY CompanyId/*,Product*/,PaymentType
 					) L
 		ON K.CompanyId = L.CompanyId /*AND K.Product = L.Product*/ AND K.PaymentType = L.PaymentType /*AND K.CustomerType = L.CustomerType*/
 		WHERE K.TxVolume2MTD is null AND K.DateHour = @DailySP
@@ -968,10 +968,10 @@ PRINT ('31.1-UU2MTD LOOP SETTINGS PREPARING - STARTED - FOR' + 'DailySP Date : '
 			SET UU2MTD = ISNULL(IIF(@DailySP = @Param_2MTDIndicator,0,L.UU2MTD),0)
 		FROM  #ReadyToUpdateData K
 		LEFT JOIN  (
-					SELECT MAX(UU2MTD) UU2MTD,CompanyId/*,Product*/PaymentType /*,CustomerType*/
+					SELECT MAX(UU2MTD) UU2MTD,CompanyId/*,Product*/,PaymentType /*,CustomerType*/
 					FROM #ReadyToUpdateData
 					WHERE DateHour < @DailySP AND UU2MTD IS NOT NULL
-					GROUP BY CompanyId/*,Product*/PaymentType
+					GROUP BY CompanyId/*,Product*/,PaymentType
 					) L
 		ON K.CompanyId = L.CompanyId /*AND K.Product = L.Product*/ AND K.PaymentType = L.PaymentType /*AND K.CustomerType = L.CustomerType*/
 		WHERE K.UU2MTD is null AND K.DateHour = @DailySP
@@ -982,10 +982,10 @@ PRINT ('27.1-UU2YTD LOOP SETTINGS PREPARING - STARTED - FOR' + 'DailySP Date : '
 			SET UU2YTD = ISNULL(L.UU2YTD,0)
 		FROM  #ReadyToUpdateData K
 		LEFT JOIN  (
-					SELECT MAX(UU2YTD) UU2YTD,CompanyId/*,Product*/PaymentType /*,CustomerType*/
+					SELECT MAX(UU2YTD) UU2YTD,CompanyId/*,Product*/,PaymentType /*,CustomerType*/
 					FROM #ReadyToUpdateData
 					WHERE DateHour < @DailySP AND UU2YTD IS NOT NULL and DateHour >= @Param_2YTDIndicator
-					GROUP BY CompanyId/*,Product*/PaymentType
+					GROUP BY CompanyId/*,Product*/,PaymentType
 					) L
 		ON K.CompanyId = L.CompanyId /*AND K.Product = L.Product*/ AND K.PaymentType = L.PaymentType /*AND K.CustomerType = L.CustomerType*/
 		WHERE K.UU2YTD is null AND K.DateHour = @DailySP
@@ -995,10 +995,10 @@ PRINT ('28.1-UU3YTD LOOP SETTINGS PREPARING - STARTED - FOR' + 'DailySP Date : '
 			SET UU3YTD = ISNULL(L.UU3YTD,0)
 		FROM  #ReadyToUpdateData K
 		LEFT JOIN  (
-					SELECT MAX(UU3YTD) UU3YTD,CompanyId/*,Product*/PaymentType /*,CustomerType*/
+					SELECT MAX(UU3YTD) UU3YTD,CompanyId/*,Product*/,PaymentType /*,CustomerType*/
 					FROM #ReadyToUpdateData
 					WHERE DateHour < @DailySP AND UU3YTD IS NOT NULL and DateHour >= @Param_3YTDIndicator
-					GROUP BY CompanyId/*,Product*/PaymentType
+					GROUP BY CompanyId/*,Product*/,PaymentType
 					) L
 		ON K.CompanyId = L.CompanyId /*AND K.Product = L.Product*/ AND K.PaymentType = L.PaymentType /*AND K.CustomerType = L.CustomerType*/
 		WHERE K.UU3YTD is null AND K.DateHour = @DailySP
@@ -1008,10 +1008,10 @@ PRINT ('29.1-UUFeatureLaunchedTD LOOP SETTINGS PREPARING - STARTED - FOR' + 'Dai
 			SET UUFeatureLaunchedTD = ISNULL(L.UUFeatureLaunchedTD,0)
 		FROM  #ReadyToUpdateData K
 		LEFT JOIN  (
-					SELECT MAX(UUFeatureLaunchedTD) UUFeatureLaunchedTD,CompanyId/*,Product*/PaymentType /*,CustomerType*/
+					SELECT MAX(UUFeatureLaunchedTD) UUFeatureLaunchedTD,CompanyId/*,Product*/,PaymentType /*,CustomerType*/
 					FROM #ReadyToUpdateData
 					WHERE DateHour < @DailySP AND UUFeatureLaunchedTD IS NOT NULL and DateHour >= @Param_FirstPaymentTxDate
-					GROUP BY CompanyId/*,Product*/PaymentType
+					GROUP BY CompanyId/*,Product*/,PaymentType
 					) L
 		ON K.CompanyId = L.CompanyId /*AND K.Product = L.Product*/ AND K.PaymentType = L.PaymentType /*AND K.CustomerType = L.CustomerType*/
 		WHERE K.UUFeatureLaunchedTD is null AND K.DateHour = @DailySP
