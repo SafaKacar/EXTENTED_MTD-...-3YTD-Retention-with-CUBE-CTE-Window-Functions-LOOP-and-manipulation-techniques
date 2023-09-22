@@ -1699,7 +1699,7 @@ WITH  MonthVsParticipatedQTDPreviousNumber_CTE AS
 		,COALESCE((UUQTD	   - UU3YTD			     + PreviousUU3YTDBeforeQuarter				) * 1.0 / NULLIF(PreviousUU3YTDBeforeQuarter		,0),0)	[HourlyRetentionRateThisQuarterToThe3YTD]
 		,COALESCE((UUSemiYTD       - UU3YTD			     + PreviousUU3YTDBeforeSemiYTD				) * 1.0 / NULLIF(PreviousUU3YTDBeforeSemiYTD		,0),0)	[HourlyRetentionRateThisSemiYTDToThe3YTD]
 		,COALESCE((UUYTD	   - UU3YTD			     + PreviousUU3YTDBeforeYTD	 				) * 1.0 / NULLIF(PreviousUU3YTDBeforeYTD	 	,0),0)	[HourlyRetentionRateThisYTDToThe3YTD]
-		,COALESCE((UU2YTD	   - UU3YTD			     + PreviousUU3YTD2YTD		 			) * 1.0 / NULLIF(PreviousUU3YTD2YTD		 					,0),0)	[HourlyRetentionRateThis2YTDToThe3YTD]
+		,COALESCE((UU2YTD	   - UU3YTD			     + PreviousUU3YTD2YTD		 			) * 1.0 / NULLIF(PreviousUU3YTD2YTD		 	,0),0)	[HourlyRetentionRateThis2YTDToThe3YTD]
 		,COALESCE((UUMTD	   - UUFeatureLaunchedTD + PreviousUUFeatureLaunchedTDBeforeMonth   ) * 1.0 / NULLIF(PreviousUUFeatureLaunchedTDBeforeMonth   ,0),0)	[HourlyRetentionRateThisMonthToTheUUFeatureLaunchedTD]
 		,COALESCE((UUQTD	   - UUFeatureLaunchedTD + PreviousUUFeatureLaunchedTDBeforeQuarter ) * 1.0 / NULLIF(PreviousUUFeatureLaunchedTDBeforeQuarter ,0),0)	[HourlyRetentionRateThisQuarterToTheUUFeatureLaunchedTD]
 		,COALESCE((UUSemiYTD   	   - UUFeatureLaunchedTD + PreviousUUFeatureLaunchedTDBeforeSemiYTD ) * 1.0 / NULLIF(PreviousUUFeatureLaunchedTDBeforeSemiYTD ,0),0)	[HourlyRetentionRateThisSemiYTDToTheUUFeatureLaunchedTD]
