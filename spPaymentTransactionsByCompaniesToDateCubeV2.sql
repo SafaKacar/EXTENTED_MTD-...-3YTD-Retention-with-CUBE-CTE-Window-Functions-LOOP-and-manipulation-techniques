@@ -67,8 +67,23 @@ DECLARE  @StartDate	     AS DATETIME = DATEADD(DAY,-1,cast(@StartDateParameter a
 					END
 			END
 			SET @StartDate = @StartDateParameter;
-DELETE FROM #TempDateHours WHERE @BaseDay	< HourlyDateTime
+DELETE FROM #TempDateHours WHERE @BaseDay   < HourlyDateTime
 DELETE FROM #TempDateHours WHERE @StartDate > HourlyDateTime;
+/*--Alternatively, one can use below CTE_DateHours to create hourly date table. The CTE can be used inside the main CTE flow or one can create a temp table like below.
+WITH CTE_DateHours
+AS
+(
+  SELECT CAST(@Param_FirstPaymentTxDate as datetime) AS HourlyDateTime
+  UNION ALL
+  SELECT DATEADD(HH, 1, HourlyDateTime)
+  FROM CTE_DatesTable
+  WHERE DATEADD(HH, 1, HourlyDateTime) < @BaseDay
+)
+SELECT HourlyDateTime 
+INTO #TempDateHours
+FROM CTE_DateHours
+OPTION (MAXRECURSION 0);
+*/
 DELETE FROM  DWH_Workspace.[\skacar].[FACT_PaymentTransactionsByCompaniesToDateCubeV2] WHERE [DateHour] >= @DailySP AND [DateHour] < @BaseDay
 ;
 WITH CustomerBasedCTE AS
