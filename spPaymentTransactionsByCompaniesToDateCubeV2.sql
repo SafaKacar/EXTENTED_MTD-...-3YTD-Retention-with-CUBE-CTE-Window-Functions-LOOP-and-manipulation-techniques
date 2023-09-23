@@ -133,7 +133,7 @@ WITH CustomerBasedCTE AS
 						 ContributedDateHour
 						,[Date]
 						,QuarterNumber
-						PaymentType
+						,PaymentType
 						,CompanyId
 						/*,[StandardizedProductName]*/
 						/*,CustomerType*/
@@ -144,28 +144,28 @@ WITH CustomerBasedCTE AS
 						,SUM(SUM(ABS(TotalVolume)))	  OVER (PARTITION BY [Date]PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) TxVolumeDTH
 						,SUM(Age)/count(case when Age IS NOT NULL THEN 1 else NULL END) AvgAgeHourly
 						,AVG(TenureByYear)						AvgTenureByYearHourly
-						,SUM(SUM(Age))													   OVER (PARTITION BY YEAR([Date]),MONTH([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)*1.0 / 
-								SUM(count(case when Age IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date]),MONTH([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) 								 AvgAgeDTH
-						,SUM(SUM(Age))													   OVER (PARTITION BY YEAR([Date]),MONTH([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)*1.0 / 
-								SUM(count(case when Age IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date]),MONTH([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)								 AvgAgeMTD
+						,SUM(SUM(Age))													   OVER (PARTITION BY YEAR([Date]),MONTH([Date]),PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)*1.0 / 
+								SUM(count(case when Age IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date]),MONTH([Date]),PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) 								 AvgAgeDTH
+						,SUM(SUM(Age))													   OVER (PARTITION BY YEAR([Date]),MONTH([Date]),PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)*1.0 / 
+								SUM(count(case when Age IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date]),MONTH([Date]),PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)								 AvgAgeMTD
 						,SUM(SUM(Age))													   OVER (PARTITION BY YEAR([Date]),QuarterNumberPaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)*1.0 / 
 								SUM(count(case when Age IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date]),QuarterNumberPaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)								 AvgAgeQTD
 						,SUM(SUM(Age))													   OVER (PARTITION BY YEAR([Date]),SemiYearIndicatorPaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)*1.0 / 
 								SUM(count(case when Age IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date]),SemiYearIndicatorPaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)								 AvgAgeSemiYTD
-						,SUM(SUM(Age))													   OVER (PARTITION BY YEAR([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)*1.0 / 
-								SUM(count(case when Age IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)										AvgAgeYTD
-						,SUM(SUM(TenureByYear))														OVER (PARTITION BY YEAR([Date]),MONTH([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)*1.0 / 
-								SUM(count(case when TenureByYear IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date]),MONTH([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) 							AvgTenureByYearDTH
-						,SUM(SUM(TenureByYear))														OVER (PARTITION BY YEAR([Date]),MONTH([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)*1.0 / 
-								SUM(count(case when TenureByYear IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date]),MONTH([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) 							AvgTenureByYearMTD
+						,SUM(SUM(Age))													   OVER (PARTITION BY YEAR([Date]),PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)*1.0 / 
+								SUM(count(case when Age IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date]),PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)										AvgAgeYTD
+						,SUM(SUM(TenureByYear))														OVER (PARTITION BY YEAR([Date]),MONTH([Date]),PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)*1.0 / 
+								SUM(count(case when TenureByYear IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date]),MONTH([Date]),PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) 							AvgTenureByYearDTH
+						,SUM(SUM(TenureByYear))														OVER (PARTITION BY YEAR([Date]),MONTH([Date]),PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)*1.0 / 
+								SUM(count(case when TenureByYear IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date]),MONTH([Date]),PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) 							AvgTenureByYearMTD
 						,SUM(SUM(TenureByYear))														OVER (PARTITION BY YEAR([Date]),QuarterNumberPaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)*1.0 / 
 								SUM(count(case when TenureByYear IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date]),QuarterNumberPaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)							AvgTenureByYearQTD
 						,SUM(SUM(TenureByYear))														OVER (PARTITION BY YEAR([Date]),SemiYearIndicatorPaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)*1.0 / 
 								SUM(count(case when TenureByYear IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date]),SemiYearIndicatorPaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) 						AvgTenureByYearSemiYTD
-						,SUM(SUM(TenureByYear))														OVER (PARTITION BY YEAR([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)*1.0 / 
-								SUM(count(case when TenureByYear IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) 									AvgTenureByYearYTD
-						,SUM(SUM(TxCount))			OVER (PARTITION BY YEAR([Date]),MONTH([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)													TxCountMTD
-						,SUM(SUM(ABS(TotalVolume))) OVER (PARTITION BY YEAR([Date]),MONTH([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) 														TxVolumeMTD
+						,SUM(SUM(TenureByYear))														OVER (PARTITION BY YEAR([Date]),PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)*1.0 / 
+								SUM(count(case when TenureByYear IS NOT NULL THEN 1 else NULL END)) OVER (PARTITION BY YEAR([Date]),PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) 									AvgTenureByYearYTD
+						,SUM(SUM(TxCount))			OVER (PARTITION BY YEAR([Date]),MONTH([Date]),PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour)													TxCountMTD
+						,SUM(SUM(ABS(TotalVolume))) OVER (PARTITION BY YEAR([Date]),MONTH([Date]),PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) 														TxVolumeMTD
 						,SUM(SUM(TxCount))			OVER (PARTITION BY YEAR([Date]),QuarterNumber,				PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) 									TxCountQTD
 						,SUM(SUM(ABS(TotalVolume))) OVER (PARTITION BY YEAR([Date]),QuarterNumber,				PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) 										TxVolumeQTD
 						,SUM(SUM(TxCount))			OVER (PARTITION BY YEAR([Date]),SemiYearIndicator,			PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ ORDER BY ContributedDateHour) 									TxCountSemiYTD
@@ -204,7 +204,7 @@ WITH CustomerBasedCTE AS
 				,CompanyId
 				/*,[StandardizedProductName]*/
 				/*,CustomerType*/
-				,RANK() OVER (Partition by YEAR(ContributedDateHour),MONTH(ContributedDateHour),DAY(ContributedDateHour)PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ Order By ContributedDateHour,CustomerKey) Ranker
+				,RANK() OVER (Partition by YEAR(ContributedDateHour),MONTH(ContributedDateHour),DAY(ContributedDateHour),PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ Order By ContributedDateHour,CustomerKey) Ranker
 			from
 					(
 					Select
@@ -215,7 +215,7 @@ WITH CustomerBasedCTE AS
 						/*,[StandardizedProductName]*/
 					From CustomerBasedCTE
 					WHERE [Date]>=@DailySP and [Date] < @BaseDay
-					Group By CustomerKeyPaymentType,CompanyId/*,[StandardizedProductName]*/
+					Group By CustomerKey,PaymentType,CompanyId/*,[StandardizedProductName]*/
 					) M
 		) R
  GROUP BY ContributedDateHourPaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/
@@ -239,7 +239,7 @@ WITH CustomerBasedCTE AS
 								,CompanyId
 								/*,[StandardizedProductName]*/
 								/*,CustomerType*/
-								,RANK() OVER (Partition by YEAR([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ Order By ContributedDateHour,CustomerKey) Ranker
+								,RANK() OVER (Partition by YEAR([Date]),PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ Order By ContributedDateHour,CustomerKey) Ranker
 							from
 									(
 									select MIN(ContributedDateHour) ContributedDateHour
@@ -252,7 +252,7 @@ WITH CustomerBasedCTE AS
 									from CustomerBasedCTE
 									where	[Date] >= @Param_QTDIndicator
 										and [Date] <  @BaseDay
-									group by CustomerKeyPaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/
+									group by CustomerKey,PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/
 									) z
 							  ) T
 					GROUP BY ContributedDateHourPaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/
@@ -275,7 +275,7 @@ WITH CustomerBasedCTE AS
 								,CompanyId
 								/*,[StandardizedProductName]*/
 								/*,CustomerType*/
-								,RANK() OVER (Partition by YEAR([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ Order By ContributedDateHour,CustomerKey) Ranker
+								,RANK() OVER (Partition by YEAR([Date]),PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ Order By ContributedDateHour,CustomerKey) Ranker
 							from
 									(
 									select MIN(ContributedDateHour) ContributedDateHour
@@ -288,7 +288,7 @@ WITH CustomerBasedCTE AS
 									from CustomerBasedCTE
 									where	[Date] >= @Param_SemiYTDIndicator
 										and [Date] <  @BaseDay
-									group by CustomerKeyPaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/
+									group by CustomerKey,PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/
 									) z
 							  ) T
 					GROUP BY ContributedDateHourPaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/
@@ -310,7 +310,7 @@ WITH CustomerBasedCTE AS
 								,CompanyId
 								/*,[StandardizedProductName]*/
 								/*,CustomerType*/
-								,RANK() OVER (Partition by YEAR([Date]),MONTH([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ Order By ContributedDateHour,CustomerKey) Ranker
+								,RANK() OVER (Partition by YEAR([Date]),MONTH([Date]),PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ Order By ContributedDateHour,CustomerKey) Ranker
 							from
 									(
 									select MIN(ContributedDateHour) ContributedDateHour
@@ -323,7 +323,7 @@ WITH CustomerBasedCTE AS
 									from CustomerBasedCTE
 									where	[Date] >= @Param_MTDIndicator
 										and [Date] <  @BaseDay
-									group by CustomerKeyPaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/
+									group by CustomerKey,PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/
 									) z
 							  ) T
 					GROUP BY ContributedDateHourPaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/
@@ -345,7 +345,7 @@ WITH CustomerBasedCTE AS
 								,CompanyId
 								/*,[StandardizedProductName]*/
 								/*,CustomerType*/
-								,RANK() OVER (Partition by YEAR([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ Order By ContributedDateHour,CustomerKey) Ranker
+								,RANK() OVER (Partition by YEAR([Date]),PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ Order By ContributedDateHour,CustomerKey) Ranker
 							from
 									(
 									select MIN(ContributedDateHour) ContributedDateHour
@@ -358,7 +358,7 @@ WITH CustomerBasedCTE AS
 									from CustomerBasedCTE
 									where	[Date] >= @Param_2MTDIndicator
 										and [Date] <  @BaseDay
-									group by CustomerKeyPaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/
+									group by CustomerKey,PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/
 									) z
 							  ) T
 					GROUP BY ContributedDateHourPaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/
@@ -380,7 +380,7 @@ WITH CustomerBasedCTE AS
 								,CompanyId
 								/*,[StandardizedProductName]*/
 								/*,CustomerType*/
-								,RANK() OVER (Partition by YEAR([Date])PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ Order By ContributedDateHour,CustomerKey) Ranker
+								,RANK() OVER (Partition by YEAR([Date]),PaymentType,CompanyId/*,[StandardizedProductName]*//*,CustomerType*/ Order By ContributedDateHour,CustomerKey) Ranker
 							from
 									(
 									select MIN(ContributedDateHour) ContributedDateHour
@@ -559,16 +559,16 @@ WITH CustomerBasedCTE AS
 						  ,L13.UUFeatureLaunchedTD
 				--	INTO DWH_Workspace..[FACT_PaymentTransactionsAndCompanyToDateCube]
 					from CrossJoiningWithLargestCTEPart_DailyWithYTDForUU M1
-					LEFT JOIN DailyWithYTDForUU								   G1  on m1.DateHour = G1.ContributedDateHour   and m1.PaymentType =  G1.PaymentType  and m1.CompanyId =  G1.CompanyId --and m1.[StandardizedProductName]=m3.[StandardizedProductName]--and m1.CustomerType = m3.CustomerType
+					LEFT JOIN DailyWithYTDForUU							   G1  on m1.DateHour = G1.ContributedDateHour   and m1.PaymentType =  G1.PaymentType  and m1.CompanyId =  G1.CompanyId --and m1.[StandardizedProductName]=m3.[StandardizedProductName]--and m1.CustomerType = m3.CustomerType
 					LEFT join DailyWithSemiYTDForUU							   m3  on m1.DateHour = m3.ContributedDateHour   and m1.PaymentType =  m3.PaymentType  and m1.CompanyId =  m3.CompanyId --and m1.[StandardizedProductName]=m3.[StandardizedProductName]--and m1.CustomerType = m3.CustomerType
-					LEFT join DailyWithQTDForUU								   m4  on m1.DateHour = m4.ContributedDateHour   and m1.PaymentType =  m4.PaymentType  and m1.CompanyId =  m4.CompanyId --and m1.[StandardizedProductName]=m4.[StandardizedProductName]--and m1.CustomerType = m4.CustomerType
+					LEFT join DailyWithQTDForUU							   m4  on m1.DateHour = m4.ContributedDateHour   and m1.PaymentType =  m4.PaymentType  and m1.CompanyId =  m4.CompanyId --and m1.[StandardizedProductName]=m4.[StandardizedProductName]--and m1.CustomerType = m4.CustomerType
 					--LEFT join DailyWith2MTDForUU							   a1  on m1.DateHour = a1.ContributedDateHour   and m1.PaymentType =  a1.PaymentType  and M1.CompanyId =  a1.CompanyId --and m1.[StandardizedProductName]=L1.[StandardizedProductName]--and m1.CustomerType = L1.CustomerType
-					LEFT join DailyWithMTDForUU								   m2  on m1.DateHour = m2.ContributedDateHour   and m1.PaymentType =  m2.PaymentType  and m1.CompanyId =  m2.CompanyId --and m1.[StandardizedProductName]=m2.[StandardizedProductName]--and m1.CustomerType = m2.CustomerType
+					LEFT join DailyWithMTDForUU							   m2  on m1.DateHour = m2.ContributedDateHour   and m1.PaymentType =  m2.PaymentType  and m1.CompanyId =  m2.CompanyId --and m1.[StandardizedProductName]=m2.[StandardizedProductName]--and m1.CustomerType = m2.CustomerType
 					LEFT join DailyUniqueCustomerCalculation					   c1  on M1.DateHour = c1.ContributedDateHour   and m1.PaymentType =  c1.PaymentType  and m1.CompanyId =  c1.CompanyId --and m1.[StandardizedProductName]=c1.[StandardizedProductName]
-					LEFT join DailyWithAndWithoutNonDistinctToDateCalculations L1  on m1.DateHour = L1.ContributedDateHour   and m1.PaymentType =  L1.PaymentType  and M1.CompanyId =  L1.CompanyId --and m1.[StandardizedProductName]=L1.[StandardizedProductName]--and m1.CustomerType = L1.CustomerType
+					LEFT join DailyWithAndWithoutNonDistinctToDateCalculations 			   L1  on m1.DateHour = L1.ContributedDateHour   and m1.PaymentType =  L1.PaymentType  and M1.CompanyId =  L1.CompanyId --and m1.[StandardizedProductName]=L1.[StandardizedProductName]--and m1.CustomerType = L1.CustomerType
 					LEFT join DailyWith2YTDForUU							   L11 on m1.DateHour = L11.ContributedDateHour  and m1.PaymentType = L11.PaymentType  and M1.CompanyId = L11.CompanyId
 					LEFT join DailyWith3YTDForUU							   L12 on m1.DateHour = L12.ContributedDateHour  and m1.PaymentType = L12.PaymentType  and M1.CompanyId = L12.CompanyId
-					LEFT join DailyWithFeatureLaunchedTDForUU				   L13 on m1.DateHour = L13.ContributedDateHour  and m1.PaymentType = L13.PaymentType  and M1.CompanyId = L13.CompanyId
+					LEFT join DailyWithFeatureLaunchedTDForUU				  	   L13 on m1.DateHour = L13.ContributedDateHour  and m1.PaymentType = L13.PaymentType  and M1.CompanyId = L13.CompanyId
 					--where m1.ContributedDateHour >= @DailySP
 				)
 	select *
