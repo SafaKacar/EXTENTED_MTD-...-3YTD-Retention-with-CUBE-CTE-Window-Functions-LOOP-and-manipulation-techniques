@@ -189,8 +189,8 @@ WITH CustomerBasedCTE AS
  , DailyUniqueCustomerCalculation AS
  (
  select
-							ContributedDateHour
-						   PaymentType
+						   ContributedDateHour
+						   ,PaymentType
 						   ,CompanyId
 						   /*,[StandardizedProductName]*/
 						   /*,CustomerType*/
@@ -200,7 +200,7 @@ WITH CustomerBasedCTE AS
 			select	
 				 ContributedDateHour
 				,CustomerKey
-				PaymentType
+				,PaymentType
 				,CompanyId
 				/*,[StandardizedProductName]*/
 				/*,CustomerType*/
