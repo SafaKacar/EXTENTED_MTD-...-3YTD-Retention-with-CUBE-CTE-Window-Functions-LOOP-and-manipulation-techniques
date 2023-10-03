@@ -34,7 +34,7 @@ DROP TABLE IF EXISTS #TempDateHours,#ReadyToUpdateData
 DECLARE
 --		@BaseDay as Date =	CAST(GETDATE() AS DATE),
 		@inc	 as INT  =  1,
---		@d       as INT  =  1,
+		@d       as INT  =  1,
 		@y		 as INT  =  0,
 		@m		 as INT  =  1
 declare @DailySP as Date SET @DailySP = DATEADD(DAY,-@d,@BaseDay)				
