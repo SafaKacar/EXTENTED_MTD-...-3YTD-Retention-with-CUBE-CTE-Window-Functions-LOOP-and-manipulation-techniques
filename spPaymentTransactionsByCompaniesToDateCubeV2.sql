@@ -4,7 +4,7 @@ EXECUTE THIS QUERY FOR DAILY ETL PLAN:
 
 	DECLARE @DailySPDate AS DATE = CAST(GETDATE() AS DATE)
 	EXEC [DBO].[spPaymentTransactionsByCompaniesToDateCubeV2] @DailySPDate
-*** If you have daily process which can lock the stream, use WAITFOR like below to prevent it. ***
+*** If you have daily ETL process (DWH Stream) which can lock the stream, use WAITFOR like below to prevent it. ***
 E.g.
 GO 
 IF datepart(HH,getdate())>=0 AND datepart(HH,getdate())<4 BEGIN WAITFOR TIME '04:00'; END ELSE BEGIN exec [dbo].[spPaymentTransactionsByCompaniesToDateCubeV2] '2022-07-13'; END
